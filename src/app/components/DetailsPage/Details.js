@@ -4,7 +4,7 @@ import './Details.css';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
-import Fab from '@material-ui/core/Fab';
+import Button from '@material-ui/core/Button';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { makeStyles } from '@material-ui/core/styles';
@@ -27,30 +27,56 @@ const TEST_RESULT_STRINGS = {
 }
 
 const useStyles = makeStyles(theme => ({
-  fab: {
+  editbutton: {
     position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(2),
+    top: theme.spacing(0),
+    right: theme.spacing(0),
+    padding: theme.spacing(1),
+    'min-width': 0,
+  },
+  relativepos: {
+    position: 'relative',
   },
 }));
 
-function MainInfo(props) {
-  const [editValues, setEditValues] = useState({})
-  function onNameChange(event) {
-    const name = event.target.name
+function useEditMode(saveCallback) {
+  const [editMode, setEditMode] = useState(false);
+  const [editValues, setEditValues] = useState({});
+  function onValueChange(name, event) {
+    const value = event.target.value;
     setEditValues(editValues => ({
       ...editValues,
-      name: name,
+      [name]: value,
     }));
   }
+  function onSave() {
+    saveCallback(editValues);
+    setEditMode(false);
+  }
+  function onEdit() {
+    setEditValues({});
+    setEditMode(true);
+  }
+
+  return [editMode, onEdit, onValueChange, onSave];
+}
+
+function MainInfo(props) {
+  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave);
+
+  const classes = useStyles()
 
   const pet = props.pet;
 
   return (
-    <Box width="790px" marginLeft="10px" border={20} borderRadius={20} borderColor="#FFFFFF" bgcolor="#FFFFFF">
+    <Box className={classes.relativepos} width="790px" marginLeft="10px" border={20} borderRadius={20} borderColor="#FFFFFF" bgcolor="#FFFFFF">
+      {editMode ?
+        <Button color="primary" className={classes.editbutton} onClick={onSave}><SaveAltIcon ></SaveAltIcon></Button>
+        : <Button color="primary" className={classes.editbutton} onClick={onEdit}><EditIcon ></EditIcon></Button>
+      }
       <Box display="flex" flexDirection="row">
-        {props.editMode ?
-          <TextField onChange={onNameChange} label="Nome" variant="outlined" defaultValue={pet.name}/>
+        {editMode ?
+          <TextField onChange={e => onValueChange('name', e)} label="Nome" variant="outlined" defaultValue={pet.name}/>
           : <Box fontSize="30px"><b>{pet.name}</b></Box>
         }
       </Box>
@@ -101,11 +127,9 @@ function InfoBox(props) {
 }
 
 function Details(props) {
-  const [editMode, setEditMode] = useState(false)
-  const classes = useStyles()
-
-  function save() {
-    setEditMode(false)
+  function onSave(newValues) {
+    console.log(newValues);
+    // Call update API
   }
 
   const pet = {
@@ -124,18 +148,9 @@ function Details(props) {
 
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
-      {editMode ?
-        <Fab className={classes.fab} color="primary" aria-label="save">
-          <SaveAltIcon onClick={() => save()}></SaveAltIcon>
-        </Fab>
-        :
-        <Fab className={classes.fab} color="primary" aria-label="edit">
-          <EditIcon onClick={() => setEditMode(true)}></EditIcon>
-        </Fab>
-      }
       <Box width="1000px" display="flex" justifyContent="center">
         <ProfilePhoto url={pet.photo_url} width="200px" height="200px"></ProfilePhoto>
-        <MainInfo pet={pet} editMode={editMode}></MainInfo>
+        <MainInfo pet={pet} onSave={onSave}></MainInfo>
       </Box>
       <InfoBox
         title="Informações comportamentais"
