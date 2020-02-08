@@ -130,7 +130,7 @@ function MainInfo(props) {
             autoWidth={true}
             label="Situação"
             defaultValue={pet.current_state}
-            onChange={e => onValueChange('state', e)}>
+            onChange={e => onValueChange('current_state', e)}>
             {Object.keys(STATE_DESCRIPTIONS).map(code =>
               <option key={code} value={code}>{STATE_DESCRIPTIONS[code]}</option>)}
           </Select>
@@ -164,7 +164,7 @@ function MainInfo(props) {
               autoWidth={true}
               label="Teste"
               defaultValue={pet.test_result}
-              onChange={e => onValueChange('state', e)}>
+              onChange={e => onValueChange('test_result', e)}>
               {Object.keys(TEST_RESULT_STRINGS).map(code =>
                 <option key={code} value={code}>{TEST_RESULT_STRINGS[code]}</option>)}
             </Select>
@@ -179,7 +179,7 @@ function MainInfo(props) {
               autoWidth={true}
               label="Teste"
               defaultValue={pet.gender}
-              onChange={e => onValueChange('state', e)}>
+              onChange={e => onValueChange('gender', e)}>
               <option key='F' value='F'>Fêmea</option>
               <option key='M' value='M'>Macho</option>
             </Select>
