@@ -20,6 +20,7 @@ function App() {
       <Switch>
         <Route exact path="/details">
           <Details/>
+          <Details petId={1}/>
         </Route>
         <Route exact path="/animals">
           <AnimalList />

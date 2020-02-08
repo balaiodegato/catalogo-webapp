@@ -1,6 +1,8 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Details.css';
+
+import Api from '../api';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -21,7 +23,7 @@ import moment from 'moment';
 
 function ProfilePhoto(props) {
   return <Box width={props.width} height={props.height} border={20} borderColor={yellow} borderRadius={20}>
-    <img width={props.width} height={props.height} alt="Foto do pet" src={props.url}></img>
+    <img width={props.width} height={props.height} alt="Foto do pet" src={props.src}></img>
   </Box>;
 }
 
@@ -54,11 +56,11 @@ function formatDate(dt) {
     return '-'
   }
 
-  return dt.format('DD/MM/YYYY')
+  return moment(dt).format('DD/MM/YYYY')
 }
 
 function EditableDateField(props) {
-  const defaultValue = props.defaultValue ? props.defaultValue.toDate() : new Date()
+  const defaultValue = props.defaultValue ? moment(props.defaultValue).toDate() : new Date()
   const [selectedDate, handleDateChange] = useState(defaultValue)
 
   const onValueChange = value => {
@@ -235,30 +237,32 @@ function InfoBox(props) {
 }
 
 function Details(props) {
-  function onSave(newValues) {
-    console.log(newValues);
-    // Call update API
+  const [pet, savePet] = useState(null)
+  const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
+
+  useEffect(() => {
+    async function fetchPet() {
+      const pet = await Api.getPet(props.petId);
+      savePet(pet);
+    }
+    fetchPet();
+  }, [props.petId, dataTimestamp]);
+
+  async function onSave(newValues) {
+    savePet({...pet, ...newValues})
+    await Api.savePet(pet.id, newValues);
+    saveDataTimestamp(Date.now());
   }
 
-  const pet = {
-    photo_url: example_photo,
-    name: "Renatinho",
-    current_state: "resident",
-    age: 12,
-    rescue_date: moment("2018-12-09"),
-    test_result: "negative",
-    gender: "M",
-    adoption_date: null,
-    castration_date: moment("2018-12-15"),
-    rescue_info: "Lorem ipsum rescue",
-    behaviour_info: "Lorem ipsum behaviour",
-  };
+  if (!pet) {
+    return <Box>Loading</Box>
+  }
 
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
-          <ProfilePhoto url={pet.photo_url} width="200px" height="200px"></ProfilePhoto>
+          <ProfilePhoto src={`data:image/jpeg;base64,${[pet.photo]}`} width="200px" height="200px"></ProfilePhoto>
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
       </MuiPickersUtilsProvider>
