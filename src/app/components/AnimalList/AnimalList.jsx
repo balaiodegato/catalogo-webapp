@@ -3,6 +3,7 @@ import { Grid, Paper } from '@material-ui/core';
 import { AnimalItem } from './AnimalItem';
 import { FilterButton } from './FilterButton';
 import { makeStyles } from '@material-ui/core/styles';
+import { Link } from 'react-router-dom'
 
 export const AnimalList = (props) => {
 
@@ -69,7 +70,9 @@ export const AnimalList = (props) => {
                 ))}
 
                 {animals.map(animal => (
-                        <AnimalItem key={animal.key} animal={animal}></AnimalItem>
+                        <AnimalItem key={animal.key} animal={animal}>
+                            <Link to="/details" />
+                        </AnimalItem>
                 ))}
 
             </Grid>
