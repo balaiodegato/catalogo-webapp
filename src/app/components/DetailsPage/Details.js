@@ -9,7 +9,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import { makeStyles } from '@material-ui/core/styles';
 
-import example_photo from '../pet_photo_example.jpeg'
+import example_photo from '../../../assets/pet_photo_example.jpeg'
 import { yellow } from '@material-ui/core/colors';
 
 function ProfilePhoto(props) {
