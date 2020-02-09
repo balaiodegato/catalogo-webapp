@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper, Typography } from '@material-ui/core';
+import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 export const AnimalItem = (props) => {
@@ -7,29 +7,15 @@ export const AnimalItem = (props) => {
     const { animal } = props
     const classes = useStyles()
     
-    const getClassInfoTeste = (infoTeste) => {
-        switch(infoTeste) {
-            case 'Negativo':
-                return classes.infoTesteNegativo
-            case 'Positivo':
-                return classes.infoTestePositivo
-            default:
-                return null
-
-        }
+    const informationTestClass = {
+        'Negativo': classes.infoTesteNegativo,
+        'Positivo': classes.infoTestePositivo
     }
 
-    const getClassStatus = (status) => {
-        switch(status) {
-            case 'Adotado':
-                return classes.statusIndicatorAdotado
-            case 'ParaAdocao':
-                return classes.statusIndicatorParaAdocao
-            case 'DaCasa':
-                return classes.statusIndicatorDaCasa
-            default:
-                return null
-        }
+    const statusClass = {
+        'Adotado': classes.statusIndicatorAdotado,
+        'ParaAdocao': classes.statusIndicatorParaAdocao,
+        'DaCasa': classes.statusIndicatorDaCasa
     }
 
     return (
@@ -40,18 +26,13 @@ export const AnimalItem = (props) => {
             <Paper
                 className={classes.paper}
             >
-                <Grid
-                    item
-                    md={2}
-                    sm={12}
-                    className={classes.gridItem}
-                >
+                <GridData className={classes.gridItem}>
                     <Grid
                         xs={4}
                     >
-                        <div
-                            className={getClassStatus(animal.status)}
-                        ></div>
+                        <Box
+                            className={statusClass[animal.status]}
+                        ></Box>
                     </Grid>
                     
                     <Grid
@@ -64,62 +45,51 @@ export const AnimalItem = (props) => {
                             alt="FotoAnimal"
                         />
                     </Grid>
-                </Grid>
+                </GridData>
                 
-                <Grid
-                    item
-                    md={2}
-                    sm={12}
-                    className={classes.gridItem}
-                    style={{ fontWeight: '600' }}
-                >
+                <GridData className={{ ...classes.gridItem, fontWeight: '600' }}>
                     {animal.name}
-                </Grid>
+                </GridData>
 
-                <Grid
-                    item
-                    md={2}
-                    sm={12}
-                    className={classes.gridItem}
-                >
+                <GridData className={classes.gridItem}>
                     {animal.dataResgate}
-                </Grid>
+                </GridData>
 
-                <Grid
-                    item
-                    md={2}
-                    sm={12}
-                    className={classes.gridItem}
-                >
+                <GridData className={classes.gridItem}>
                     {animal.dataAdocao}
-                </Grid>
+                </GridData>
 
-                <Grid
-                    item
-                    md={2}
-                    sm={12}
-                    className={classes.gridItem}
-                >
+                <GridData className={classes.gridItem}>
                     {animal.dataCastracao}
-                </Grid>
+                </GridData>
 
-                <Grid
-                    item
-                    md={2}
-                    sm={12}
-                    className={classes.gridTesteItem}
-                >
+                <GridData className={classes.gridTesteItem}>
                     <Typography
-                        className={getClassInfoTeste(animal.infoTeste)}
+                        className={informationTestClass[animal.infoTeste]}
                     >
                         {animal.infoTeste}
                     </Typography>
                     <Typography>
                         {animal.dataTeste}
                     </Typography>
-                </Grid>
+                </GridData>
 
             </Paper>
+        </Grid>
+    )
+}
+
+const GridData = (props) => {
+    const { className, children } = props
+    
+    return (
+        <Grid
+            item
+            md={2}
+            sm={12}
+            className={className}
+        >
+            { children }
         </Grid>
     )
 }
