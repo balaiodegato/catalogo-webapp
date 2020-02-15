@@ -1,0 +1,2 @@
+id,name,current_state,age,rescue_date,test_result,gender,adoption_date,castration_date,rescue_info,behaviour_info
+1,Renatinho,resident,12,2018-12-09,negative,M,NULL,2018-12-15,Lorem ipsum rescue,Lorem ipsum behaviour
