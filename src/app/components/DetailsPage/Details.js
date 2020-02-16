@@ -22,12 +22,7 @@ import moment from 'moment';
 import { useParams } from 'react-router-dom';
 
 import { useEditMode } from './hooks';
-
-function ProfilePhoto(props) {
-  return <Box width={props.width} height={props.height} border={20} borderColor={yellow} borderRadius={20}>
-    <img width={props.width} height={props.height} alt="Foto do pet" src={props.src}></img>
-  </Box>;
-}
+import ProfilePhoto from './components/ProfilePhoto';
 
 const STATE_DESCRIPTIONS = {
   "resident": "residente do abrigo",
@@ -224,11 +219,12 @@ function Details(props) {
   useEffect(() => {
     async function fetchPet() {
       const pet = await Api.getPet(params.id);
-      savePet(pet.data);
+      pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
+      savePet(pet);
     }
     fetchPet();
   // eslint-disable-next-line
-  }, [props.petId, dataTimestamp]);
+  }, [params.id, dataTimestamp]);
 
   async function onSave(newValues) {
     savePet({...pet, ...newValues})
@@ -240,11 +236,19 @@ function Details(props) {
     return <Box>Loading</Box>
   }
 
+  const imageSrc = `data:image/jpeg;base64,${[pet.photo]}`
+
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
-          <ProfilePhoto /*src={`data:image/jpeg;base64,${[pet.photo]}`}*/ src={pet.img} width="200px" height="200px"></ProfilePhoto>
+          <ProfilePhoto
+            src={imageSrc}
+            width={200}
+            height={200}
+            crop={pet.crop}
+            onSave={onSave}
+          ></ProfilePhoto>
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
       </MuiPickersUtilsProvider>
