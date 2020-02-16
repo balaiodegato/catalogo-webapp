@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import './Details.css';
 
-import Api from '../../../api/index';
+import Api from '../../../api';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -259,7 +259,7 @@ function Details(props) {
   if (!pet) {
     return <Box>Loading</Box>
   }
-  
+
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
