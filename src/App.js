@@ -18,12 +18,11 @@ function App() {
       </div>
 
       <Switch>
-        <Route exact path="/details">
-          <Details/>
-          <Details petId={1}/>
-        </Route>
-        <Route exact path="/animals">
+        <Route exact path="/">
           <AnimalList />
+        </Route>
+        <Route exact path="/details/:id">
+          <Details/>
         </Route>
       </Switch>
 

@@ -1,11 +1,13 @@
 import React from 'react';
 import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom'
 
-export const AnimalItem = (props) => {
+export function AnimalItem (props) {
 
     const { animal } = props
     const classes = useStyles()
+    const history = useHistory()
     
     const informationTestClass = {
         'Negativo': classes.infoTesteNegativo,
@@ -18,10 +20,15 @@ export const AnimalItem = (props) => {
         'DaCasa': classes.statusIndicatorDaCasa
     }
 
+    const navigateToDetails = () => {
+        history.push(`/details/${animal.key}`)
+    }
+
     return (
         <Grid 
             container
             className={classes.container}
+            onClick={() => navigateToDetails() }
         >
             <Paper
                 className={classes.paper}
@@ -79,7 +86,7 @@ export const AnimalItem = (props) => {
     )
 }
 
-const GridData = (props) => {
+function GridData(props) {
     const { className, children } = props
     
     return (

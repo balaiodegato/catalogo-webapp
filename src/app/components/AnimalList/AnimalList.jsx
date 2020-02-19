@@ -70,16 +70,14 @@ export const AnimalList = (props) => {
                 ))}
 
                 {animals.map(animal => (
-                        <AnimalItem key={animal.key} animal={animal}>
-                            <Link to="/details" />
-                        </AnimalItem>
+                        <AnimalItem key={animal.key} animal={animal} />
                 ))}
 
             </Grid>
         )
 }
 
-const HeaderItem = (props) => {
+function HeaderItem(props) {
     const { classes, header } = props
 
     return (

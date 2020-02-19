@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import './Details.css';
 
-import Api from '../api';
+import Api from '../../../api/index';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -17,9 +17,9 @@ import {
 } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 
-import example_photo from '../../../assets/pet_photo_example.jpeg'
 import { yellow } from '@material-ui/core/colors';
 import moment from 'moment';
+import { useParams } from 'react-router-dom';
 
 function ProfilePhoto(props) {
   return <Box width={props.width} height={props.height} border={20} borderColor={yellow} borderRadius={20}>
@@ -239,10 +239,11 @@ function InfoBox(props) {
 function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
+  const params = useParams()
 
   useEffect(() => {
     async function fetchPet() {
-      const pet = await Api.getPet(props.petId);
+      const pet = await Api.getPet(params.id);
       savePet(pet);
     }
     fetchPet();
