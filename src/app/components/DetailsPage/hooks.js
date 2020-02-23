@@ -19,6 +19,9 @@ export function useEditMode(saveCallback) {
     editValues.current = {};
     setEditMode(true);
   }
+  function onCancel() {
+    setEditMode(false);
+  }
 
-  return [editMode, onEdit, onValueChange, onSave];
+  return [editMode, onEdit, onValueChange, onSave, onCancel];
 }
