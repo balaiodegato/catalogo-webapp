@@ -1,22 +1,22 @@
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export function useEditMode(saveCallback) {
   const [editMode, setEditMode] = useState(false);
-  const [editValues, setEditValues] = useState({});
+  const editValues = useRef({});
   function onValueChange(name, event) {
     const value = (event && event.target && event.target.value) ? event.target.value : event;
-    setEditValues(editValues => ({
-      ...editValues,
+    editValues.current = {
+      ...editValues.current,
       [name]: value,
-    }));
+    };
   }
   function onSave() {
-    saveCallback(editValues);
+    saveCallback(editValues.current);
     setEditMode(false);
   }
   function onEdit() {
-    setEditValues({});
+    editValues.current = {};
     setEditMode(true);
   }
 
