@@ -236,14 +236,12 @@ function Details(props) {
     return <Box>Loading</Box>
   }
 
-  const imageSrc = `data:image/jpeg;base64,${[pet.photo]}`
-
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
           <ProfilePhoto
-            src={imageSrc}
+            src={pet.photo}
             width={200}
             height={200}
             crop={pet.crop}
