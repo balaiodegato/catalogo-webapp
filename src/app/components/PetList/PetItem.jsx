@@ -3,9 +3,8 @@ import { Grid, Box, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 
-export function AnimalItem (props) {
+export function PetItem ({ pet }) {
 
-    const { animal } = props
     const classes = useStyles()
     const history = useHistory()
     
@@ -16,12 +15,12 @@ export function AnimalItem (props) {
 
     const statusClass = {
         'Adotado': classes.statusIndicatorAdotado,
-        'ParaAdocao': classes.statusIndicatorParaAdocao,
+        'Estrelinha': classes.statusIndicatorEstrelinha,
         'DaCasa': classes.statusIndicatorDaCasa
     }
 
     const navigateToDetails = () => {
-        history.push(`/details/${animal.key}`)
+        history.push(`/details/${pet.id}`)
     }
 
     return (
@@ -35,49 +34,51 @@ export function AnimalItem (props) {
             >
                 <GridData className={classes.gridItem}>
                     <Grid
+                        item
                         xs={4}
                     >
                         <Box
-                            className={statusClass[animal.status]}
+                            className={statusClass[pet.status]}
                         ></Box>
                     </Grid>
                     
                     <Grid
                         xs={8}
+                        item
                     >
                         <img 
                             width='80'
                             height='80'
                             src='https://abrilsuperinteressante.files.wordpress.com/2018/05/filhotes-de-cachorro-alcanc3a7am-o-c3a1pice-de-fofura-com-8-semanas1.png'
-                            alt="FotoAnimal"
+                            alt="FotoPet"
                         />
                     </Grid>
                 </GridData>
                 
                 <GridData className={{ ...classes.gridItem, fontWeight: '600' }}>
-                    {animal.name}
+                    {pet.name}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {animal.dataResgate}
+                    {pet.rescue_date}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {animal.dataAdocao}
+                    {pet.adoption_date}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {animal.dataCastracao}
+                    {pet.castration_date}
                 </GridData>
 
                 <GridData className={classes.gridTesteItem}>
                     <Typography
-                        className={informationTestClass[animal.infoTeste]}
+                        className={informationTestClass[pet.felv_fiv]}
                     >
-                        {animal.infoTeste}
+                        {pet.test_result}
                     </Typography>
                     <Typography>
-                        {animal.dataTeste}
+                        {pet.test_date}
                     </Typography>
                 </GridData>
 
@@ -141,7 +142,7 @@ const useStyles = makeStyles(theme => ({
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
-    statusIndicatorParaAdocao: {
+    statusIndicatorEstrelinha: {
         height: '100px',
         width: '10px',
         backgroundColor: 'purple',
@@ -157,4 +158,4 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export default AnimalItem
+export default PetItem
