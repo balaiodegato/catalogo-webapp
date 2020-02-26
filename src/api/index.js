@@ -51,12 +51,15 @@ function sleep(ms) {
 
 
 class Api {
+
+  static BASE_URL = 'https://us-central1-dataloadercatalogobalaiogato.cloudfunctions.net/api/v1/animals'
+
   static async getPet(petId) {
-    await sleep(100);
-    while (!petsDatabase) {
-      await sleep(100);
+    try {
+      return axios.get(`${this.BASE_URL}/${petId}`)
+    } catch(err) {
+      console.warn('Erro ao requisitar Firebase: ', err);
     }
-    return petsDatabase[petId];
   }
 
   static async savePet(petId, data) {
@@ -66,6 +69,14 @@ class Api {
       ...data,
     };
     return petsDatabase[petId];
+  }
+
+  static getAllPets() {
+    try {
+      return axios.get(this.BASE_URL)
+    } catch(err) {
+      console.warn('Erro ao requisitar Firebase: ', err);
+    }
   }
 }
 
