@@ -244,7 +244,7 @@ function Details(props) {
   useEffect(() => {
     async function fetchPet() {
       const pet = await Api.getPet(params.id);
-      savePet(pet);
+      savePet(pet.data);
     }
     fetchPet();
   }, [props.petId, dataTimestamp]);
@@ -258,12 +258,12 @@ function Details(props) {
   if (!pet) {
     return <Box>Loading</Box>
   }
-
+  
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
-          <ProfilePhoto src={`data:image/jpeg;base64,${[pet.photo]}`} width="200px" height="200px"></ProfilePhoto>
+          <ProfilePhoto /*src={`data:image/jpeg;base64,${[pet.photo]}`}*/ src={pet.imgUrl} width="200px" height="200px"></ProfilePhoto>
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
       </MuiPickersUtilsProvider>

@@ -49,7 +49,7 @@ export function PetItem ({ pet }) {
                         <img 
                             width='80'
                             height='80'
-                            src='https://abrilsuperinteressante.files.wordpress.com/2018/05/filhotes-de-cachorro-alcanc3a7am-o-c3a1pice-de-fofura-com-8-semanas1.png'
+                            src={pet.imgUrl}
                             alt="FotoPet"
                         />
                     </Grid>
