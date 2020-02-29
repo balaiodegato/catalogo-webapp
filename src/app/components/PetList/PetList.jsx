@@ -9,11 +9,13 @@ export const PetList = () => {
 
     const classes = useStyles()
     const [pets, setPets] = useState([])
+    const [filteredPets, setFilteredPets] = useState([])
 
     useEffect(() => {
         const fetchData = async () => {
             const apiResponse = await Api.getAllPets()
             setPets(apiResponse.data)
+            setFilteredPets(apiResponse.data)
         }
         fetchData()
     }, [])
@@ -22,19 +24,26 @@ export const PetList = () => {
         { key: '1', label: 'Nome' },
         { key: '2', label: 'Data de Resgate' },
         { key: '3', label: 'Data de Adoção' },
-        { key: '4', label: 'Data de Castração' },
+        { key: '4', label: 'Castrado' },
         { key: '5', label: 'Teste' }
     ]
 
+    function filterPets(kind) {
+        const filteredPets = pets.filter(pet => pet.kind === kind)
+        
+        setFilteredPets(filteredPets)
+    }
+
     return (
         <Grid container>
-            {/* <Grid 
-                    item 
-                    xs={12}
-                >
-                    <FilterButton/>
-                    
-                </Grid> */}
+            <Grid
+                item
+                xs={12}
+            >
+                <FilterButton filterPets={filterPets} />
+
+            </Grid>
+
             <Grid
                 item
                 xs={2}
@@ -45,7 +54,7 @@ export const PetList = () => {
                 <HeaderItem key={header.key} classes={classes} header={header}></HeaderItem>
             ))}
 
-            {pets.map(pet => (
+            {filteredPets.map(pet => (
                 <PetItem key={pet.id} pet={pet} />
             ))}
 
