@@ -2,7 +2,8 @@ import React from 'react';
 import { Grid, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
-import petPhotoDefault from '../../../assets/pet-default.jpg'
+import catPhotoDefault from '../../../assets/cat-default-photo.jpg'
+import dogPhotoDefault from '../../../assets/dog-default-photo.jpg'
 
 export function PetItem({ pet }) {
 
@@ -43,7 +44,7 @@ export function PetItem({ pet }) {
                         item
                     >
                         <PetPhoto
-                            src={pet.imgUrl ? pet.imgUrl : petPhotoDefault}
+                            src={pet.imgUrl ? pet.imgUrl : getDefaultPhoto(pet)}
                         />
                     </Grid>
                 </GridData>
@@ -71,6 +72,17 @@ export function PetItem({ pet }) {
             </Paper>
         </Grid>
     )
+}
+
+function getDefaultPhoto(pet) {
+    switch(pet.kind) {
+        case 'cat':
+            return catPhotoDefault
+        case 'dog':
+            return dogPhotoDefault
+        default:
+            return null
+    }
 }
 
 function GridData(props) {
