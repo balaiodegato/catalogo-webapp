@@ -1,72 +1,72 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Button, Typography} from '@material-ui/core'
+import { useEffect } from 'react'
 
-export const FilterButton = () => {
+export const FilterButton = ({ filterPets }) => {
 
     const classes = useStyles()
+    const [isDogFilterSelected, setIsDogFilterSelected] = useState(false)
+    const [isCatFilterSelected, setIsCatFilterSelected] = useState(false)
+    const [dogFilterButtonClass, setDogFilterButtonClass] = useState(classes.filterButton)
+    const [catFilterButtonClass, setCatFilterButtonClass] = useState(classes.filterButton)
+
+    useEffect(() => {
+        if(isDogFilterSelected) {
+            filterPets('dog')
+            setIsCatFilterSelected(false)
+            setDogFilterButtonClass(`${classes.filterButton} ${classes.selected}`)
+        } else {
+            setDogFilterButtonClass(classes.filterButton)
+        }
+    }, [isDogFilterSelected])
+
+    useEffect(() => {
+        if(isCatFilterSelected) {
+            filterPets('cat')
+            setIsDogFilterSelected(false)
+            setCatFilterButtonClass(`${classes.filterButton} ${classes.selected}`)
+        } else {
+            setCatFilterButtonClass(classes.filterButton)
+        }
+    }, [isCatFilterSelected])
 
     return (
-        <Grid>
-            <Button 
-                variant="outlined" 
-                className={classes.deselectedButton}
+        <Grid container className={classes.container}>
+            <button 
+                className={dogFilterButtonClass}
+                onClick={() => setIsDogFilterSelected(true)}
             >
-                <span className={classes.deselectedDot}></span>
-                <Typography
-                    className={classes.colorGreen}
-                >
-                    Cães
-                </Typography>
-            </Button>
+                Cães
+            </button>
 
-            <Button 
-                variant="primary" 
-                className={classes.selectedButton}
+            <button 
+                className={catFilterButtonClass}
+                onClick={() => setIsCatFilterSelected(true)}
             >
-                <Typography
-                    className={classes.colorWhite}
-                >
-                    Gatos
-                </Typography>
-                <span className={classes.selectedDot}></span>
-            </Button>
+                Gatos
+            </button>
         </Grid>
     )
 }
 
 const useStyles = makeStyles(theme => ({
-    colorGreen: {
-        color: '#b8cd00'
+    container: {
+        padding: '5px'
     },
-    deselectedButton: {
+    filterButton: {
+        padding: '10px',
+        marginRight: '10px',
+        width: '90px',
+        background: 'white',
         border: '2px solid #b8cd00',
-        padding: '5px',
+        outline: 'none',
         borderRadius: '50px',
-        width: '150px'
+        color: '#b8cd00',
     },
-    deselectedDot: {
-        height: '30px',
-        width: '30px',
-        backgroundColor: '#bbb',
-        borderRadius: '50%',
-        display: 'inline-block'
-    },
-    colorWhite: {
-        color: '#ffffff'
-    },
-    selectedButton: {
-        backgroundColor: '#b8cd00',
-        padding: '5px',
-        borderRadius: '50px',
-        width: '150px'
-    },
-    selectedDot: {
-        height: '30px',
-        width: '30px',
-        backgroundColor: '#0573d1',
-        borderRadius: '50%',
-        display: 'inline-block'
+    selected: {
+        background: '#b8cd00',
+        color: 'white'
     }
 }))
 
