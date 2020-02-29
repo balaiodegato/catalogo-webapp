@@ -1,17 +1,13 @@
 import React from 'react';
-import { Grid, Box, Paper, Typography } from '@material-ui/core';
+import { Grid, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
+import petPhotoDefault from '../../../assets/pet-default.jpg'
 
-export function PetItem ({ pet }) {
+export function PetItem({ pet }) {
 
     const classes = useStyles()
     const history = useHistory()
-    
-    const informationTestClass = {
-        'Negativo': classes.infoTesteNegativo,
-        'Positivo': classes.infoTestePositivo
-    }
 
     const statusClass = {
         'Adotado': classes.statusIndicatorAdotado,
@@ -24,10 +20,10 @@ export function PetItem ({ pet }) {
     }
 
     return (
-        <Grid 
+        <Grid
             container
             className={classes.container}
-            onClick={() => navigateToDetails() }
+            onClick={() => navigateToDetails()}
         >
             <Paper
                 className={classes.paper}
@@ -41,21 +37,18 @@ export function PetItem ({ pet }) {
                             className={statusClass[pet.status]}
                         ></Box>
                     </Grid>
-                    
+
                     <Grid
                         xs={8}
                         item
                     >
-                        <img 
-                            width='80'
-                            height='80'
-                            src={pet.imgUrl}
-                            alt="FotoPet"
+                        <PetPhoto
+                            src={pet.imgUrl ? pet.imgUrl : petPhotoDefault}
                         />
                     </Grid>
                 </GridData>
-                
-                <GridData className={{ ...classes.gridItem, fontWeight: '600' }}>
+
+                <GridData className={classes.gridItemBold}>
                     {pet.name}
                 </GridData>
 
@@ -68,18 +61,11 @@ export function PetItem ({ pet }) {
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.castration_date}
+                    {pet.castrated}
                 </GridData>
 
-                <GridData className={classes.gridTesteItem}>
-                    <Typography
-                        className={informationTestClass[pet.felv_fiv]}
-                    >
-                        {pet.test_result}
-                    </Typography>
-                    <Typography>
-                        {pet.test_date}
-                    </Typography>
+                <GridData className={classes.gridItem}>
+                    {pet.test_result}
                 </GridData>
 
             </Paper>
@@ -89,7 +75,7 @@ export function PetItem ({ pet }) {
 
 function GridData(props) {
     const { className, children } = props
-    
+
     return (
         <Grid
             item
@@ -97,8 +83,20 @@ function GridData(props) {
             sm={12}
             className={className}
         >
-            { children }
+            {children ? children : '-'}
         </Grid>
+    )
+}
+
+function PetPhoto({ src }) {
+
+    return (
+        <img
+            width='80'
+            height='80'
+            src={src}
+            alt="FotoPet"
+        />
     )
 }
 
@@ -121,19 +119,12 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    gridTesteItem: {
+    gridItemBold: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    infoTesteNegativo: {
-        fontWeight: 600,
-        color: '#11b726'
-    },
-    infoTestePositivo: {
-        fontWeight: 600,
-        color: '#ff1414'
+        fontWeight: '600'
     },
     statusIndicatorAdotado: {
         height: '100px',
