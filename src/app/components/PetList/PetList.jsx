@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Grid, Paper, Box } from '@material-ui/core';
+import { Grid, Paper } from '@material-ui/core';
 import Pagination from '@material-ui/lab/Pagination';
 import { PetItem } from './PetItem';
 import { FilterButton } from './FilterButton';
@@ -44,7 +44,8 @@ export const PetList = () => {
             setFilteredPets(pets)
         }
         setPage(1)
-        
+    
+    // eslint-disable-next-line
     }, [filter])
 
     const headers = [
@@ -65,10 +66,6 @@ export const PetList = () => {
     function sortPets(pets) {
         return pets.sort((a, b) => a.status > b.status ? -1 : 1)
     }
-
-    // if(filteredPets.length === 0) {
-    //     return <Box>Loading</Box>
-    // }
 
     return (
         <Grid container>

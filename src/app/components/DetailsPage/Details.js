@@ -247,6 +247,7 @@ function Details(props) {
       savePet(pet.data);
     }
     fetchPet();
+  // eslint-disable-next-line
   }, [props.petId, dataTimestamp]);
 
   async function onSave(newValues) {

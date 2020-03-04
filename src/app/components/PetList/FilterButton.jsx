@@ -19,6 +19,7 @@ export const FilterButton = ({ filterPets }) => {
         } else {
             setDogFilterButtonClass(classes.filterButton)
         }
+    // eslint-disable-next-line
     }, [isDogFilterSelected])
 
     useEffect(() => {
@@ -29,6 +30,7 @@ export const FilterButton = ({ filterPets }) => {
         } else {
             setCatFilterButtonClass(classes.filterButton)
         }
+    // eslint-disable-next-line
     }, [isCatFilterSelected])
 
     return (
