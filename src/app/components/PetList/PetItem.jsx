@@ -13,7 +13,8 @@ export function PetItem({ pet }) {
     const statusClass = {
         'Adotado': classes.statusIndicatorAdotado,
         'Estrelinha': classes.statusIndicatorEstrelinha,
-        'DaCasa': classes.statusIndicatorDaCasa
+        'Residente': classes.statusIndicatorResidente,
+        'Para adoção': classes.statusIndicatorAdocao
     }
 
     const navigateToDetails = () => {
@@ -44,7 +45,7 @@ export function PetItem({ pet }) {
                         item
                     >
                         <PetPhoto
-                            src={pet.imgUrl ? pet.imgUrl : getDefaultPhoto(pet)}
+                            src={pet.img ? pet.img : getDefaultPhoto(pet)}
                         />
                     </Grid>
                 </GridData>
@@ -152,10 +153,17 @@ const useStyles = makeStyles(theme => ({
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
-    statusIndicatorDaCasa: {
+    statusIndicatorResidente: {
         height: '100px',
         width: '10px',
         backgroundColor: 'green',
+        borderTopLeftRadius: '10px',
+        borderBottomLeftRadius: '10px'
+    },
+    statusIndicatorAdocao: {
+        height: '100px',
+        width: '10px',
+        backgroundColor: 'blue',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     }
