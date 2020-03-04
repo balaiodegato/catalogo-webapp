@@ -75,6 +75,7 @@ export const PetList = () => {
             <Grid
                 item
                 xs={12}
+                className={classes.actionsGrid}
             >
                 <TextField 
                     className={classes.searchInput}
@@ -132,6 +133,9 @@ const useStyles = makeStyles(theme => ({
     searchInput: {
         margin: '5px',
         width: '20vw'
+    },
+    actionsGrid: {
+        marginLeft: '20px'
     },
     paperHeader: {
         display: 'flex',
