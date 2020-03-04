@@ -38,7 +38,7 @@ export const PetList = () => {
     useEffect(() => {
         if(filter.length >= 3) {
             setFilteredPets(
-                pets.filter(pet => pet.name.includes(filter))
+                filteredPets.filter(pet => pet.name.includes(filter))
             )
         } else if(filter.length === 0) {
             setFilteredPets(pets)
@@ -66,9 +66,9 @@ export const PetList = () => {
         return pets.sort((a, b) => a.status > b.status ? -1 : 1)
     }
 
-    if(filteredPets.length == 0) {
-        return <Box>Loading</Box>
-    }
+    // if(filteredPets.length === 0) {
+    //     return <Box>Loading</Box>
+    // }
 
     return (
         <Grid container>
@@ -79,7 +79,7 @@ export const PetList = () => {
             >
                 <TextField 
                     className={classes.searchInput}
-                    label='Pesquisar pets' 
+                    label='Pesquise pelo nome do pet' 
                     color='primary' 
                     value={filter} 
                     onChange={(e) => { setFilter(e.target.value) }}
