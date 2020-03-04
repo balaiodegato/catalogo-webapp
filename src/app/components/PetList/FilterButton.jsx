@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Grid, Button, Typography} from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import { useEffect } from 'react'
 
 export const FilterButton = ({ filterPets }) => {

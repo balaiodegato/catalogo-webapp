@@ -1,6 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 import Details from './app/components/DetailsPage/Details.js';
 import PetList from './app/components/PetList/PetList';
 import Header from './app/components/Header'
@@ -13,16 +11,14 @@ const history = createBrowserHistory();
 function App() {
   return (
     <Router history={history}>
-      <div className="App">
-        <Header />
-      </div>
+      <Header />
 
       <Switch>
         <Route exact path="/">
           <PetList />
         </Route>
         <Route exact path="/details/:id">
-          <Details/>
+          <Details />
         </Route>
       </Switch>
 
