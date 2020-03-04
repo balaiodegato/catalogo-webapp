@@ -14,7 +14,7 @@ function App() {
   return (
     <Router history={history}>
       <div className="App">
-        {/* <Header /> */}
+        <Header />
       </div>
 
       <Switch>

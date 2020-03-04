@@ -14,10 +14,10 @@ const Header = () => {
             </h1>
             <img src={paw} className='paw'/>
             
-            <div className='search-box'>
+            {/* <div className='search-box'>
                 <FontAwesomeIcon icon={faSearch} className='search-icon'/>
                 <input type='text' placeholder='PESQUISE AQUI' className='search'/>
-            </div>
+            </div> */}
         </div>
     )
 }
