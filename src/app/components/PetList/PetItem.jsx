@@ -142,28 +142,28 @@ const useStyles = makeStyles(theme => ({
     statusIndicatorAdotado: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'yellow',
+        backgroundColor: '#92a8d1',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
     statusIndicatorEstrelinha: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'purple',
+        backgroundColor: '#f2a994',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
     statusIndicatorResidente: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'green',
+        backgroundColor: '#007239',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
     statusIndicatorAdocao: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'blue',
+        backgroundColor: '#a0db8e',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     }

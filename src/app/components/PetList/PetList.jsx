@@ -64,7 +64,7 @@ export const PetList = () => {
     }
 
     function sortPets(pets) {
-        return pets.sort((a, b) => a.status > b.status ? -1 : 1)
+        return pets.sort((a, b) => a.status > b.status ? 1 : -1)
     }
 
     return (
@@ -74,15 +74,29 @@ export const PetList = () => {
                 xs={12}
                 className={classes.actionsGrid}
             >
-                <TextField 
-                    className={classes.searchInput}
-                    label='Pesquise pelo nome do pet' 
-                    color='primary' 
-                    value={filter} 
-                    onChange={(e) => { setFilter(e.target.value) }}
-                />
-                <FilterButton filterPets={filterKindPets} />
-
+                <Grid
+                    item
+                    xs={6}
+                >
+                    <TextField 
+                        className={classes.searchInput}
+                        label='Pesquise pelo nome do pet' 
+                        color='primary' 
+                        value={filter} 
+                        onChange={(e) => { setFilter(e.target.value) }}
+                    />
+                    <FilterButton filterPets={filterKindPets} />
+                </Grid>
+                <Grid
+                    item
+                    xs={6}
+                    className={classes.gridLabelStatus}
+                >
+                    <span className={classes.labelStatus}><div className={classes.colorParaAdocao}></div>Para Adoção</span>
+                    <span className={classes.labelStatus}><div className={classes.colorAdotado}></div>Adotado</span>
+                    <span className={classes.labelStatus}><div className={classes.colorResidente}></div>Residente</span>
+                    <span className={classes.labelStatus}><div className={classes.colorEstrelinha}></div>Estrelinha</span>
+                </Grid>
             </Grid>
 
             <Grid
@@ -132,7 +146,8 @@ const useStyles = makeStyles(theme => ({
         width: '20vw'
     },
     actionsGrid: {
-        marginLeft: '20px'
+        display: 'flex',
+        margin: '20px'
     },
     paperHeader: {
         display: 'flex',
@@ -143,6 +158,38 @@ const useStyles = makeStyles(theme => ({
         borderRadius: '10px',
         height: '100%',
         fontWeight: '600'
+    },
+    gridLabelStatus: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around'
+    },
+    labelStatus: {
+        display: 'flex'
+    },
+    colorParaAdocao: {
+        width: '17px',
+        height: '17px',
+        marginRight: '5px',
+        backgroundColor: '#a0db8e'
+    },
+    colorAdotado: {
+        width: '17px',
+        height: '17px',
+        marginRight: '5px',
+        backgroundColor: '#92a8d1'
+    },
+    colorResidente: {
+        width: '17px',
+        height: '17px',
+        marginRight: '5px',
+        backgroundColor: '#007239'
+    },
+    colorEstrelinha: {
+        width: '17px',
+        height: '17px',
+        marginRight: '5px',
+        backgroundColor: '#f2a994'
     }
 }))
 
