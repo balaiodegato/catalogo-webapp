@@ -22,6 +22,8 @@ Para deploy, basta configurar o firebase CLI, logar na conta devbalaiodegato@gma
 
     `firebase deploy`
 
+    O catalogo está disponível em: (https://dataloadercatalogobalaiogato.firebaseapp.com/)
+
 ### `npm run build`
 
 Builds the app for production to the `build` folder.<br />
