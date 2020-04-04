@@ -22,7 +22,7 @@ export const PetList = () => {
             setFilteredPets(orderedPets)
         }
         fetchData()
-    }, [sortPets])
+    }, [])
 
     useEffect(() => {
         if(filter.length >= 3) {
