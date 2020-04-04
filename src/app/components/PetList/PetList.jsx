@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { Grid, Paper } from '@material-ui/core';
-import Pagination from '@material-ui/lab/Pagination';
 import { PetItem } from './PetItem';
 import { FilterButton } from './FilterButton';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,11 +11,7 @@ export const PetList = () => {
     const classes = useStyles()
     const [pets, setPets] = useState([])
     const [filteredPets, setFilteredPets] = useState([])
-    const [paginatedPets, setPaginatedPets] = useState([])
     const [filter, setFilter] = useState('')
-
-    const [page, setPage] = useState(1)
-    const itemsPerPage = 6
 
     useEffect(() => {
         const fetchData = async () => {
@@ -27,25 +22,16 @@ export const PetList = () => {
             setFilteredPets(orderedPets)
         }
         fetchData()
-    }, [])
-
-    useEffect(() => {
-        const initialIndex = itemsPerPage * (page -1)
-        const finalIndex = initialIndex + itemsPerPage
-        setPaginatedPets(filteredPets.slice(initialIndex, finalIndex))
-    }, [filteredPets, page])
+    }, [sortPets])
 
     useEffect(() => {
         if(filter.length >= 3) {
-            setFilteredPets(
-                filteredPets.filter(pet => pet.name.includes(filter))
-            )
+            const orderedPets = sortPets(filteredPets.filter(pet => pet.name.includes(filter)))
+            setFilteredPets(orderedPets)
         } else if(filter.length === 0) {
             setFilteredPets(pets)
         }
-        setPage(1)
     
-    // eslint-disable-next-line
     }, [filter])
 
     const headers = [
@@ -58,13 +44,20 @@ export const PetList = () => {
 
     function filterKindPets(kind) {
         const filteredPets = pets.filter(pet => pet.kind === kind)
-        
-        setFilteredPets(filteredPets)
-        setPage(1)
+        setFilteredPets(sortPets(filteredPets))
     }
 
     function sortPets(pets) {
-        return pets.sort((a, b) => a.status > b.status ? 1 : -1)
+        const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === 'Para adoção'))
+        const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === 'Adotado'))
+        const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === 'Residente'))
+        const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === 'Estrelinha'))
+
+        return [...petsParaAdocao, ...petsAdotados, ...petsResidentes, ...petsEstrelinha]
+    }
+
+    function sortPetsByName(pets) {
+        return pets.sort((a, b) => a.name > b.name ? 1 : -1)
     }
 
     return (
@@ -109,11 +102,9 @@ export const PetList = () => {
                 <HeaderItem key={header.key} classes={classes} header={header}></HeaderItem>
             ))}
 
-            {paginatedPets.map(pet => (
+            {filteredPets.map(pet => (
                 <PetItem key={pet.id} pet={pet} />
             ))}
-
-            <Pagination count={Math.ceil(filteredPets.length / itemsPerPage)} page={page} onChange={(e, page) => setPage(page)} />
 
         </Grid>
     )
