@@ -239,7 +239,7 @@ function Details(props) {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
           <ProfilePhoto
-            src={pet.photo}
+            src={pet.img}
             width={200}
             height={200}
             crop={pet.crop}
