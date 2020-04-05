@@ -249,7 +249,7 @@ function Details(props) {
         </Box>
       </MuiPickersUtilsProvider>
       <InfoBox
-        title="Informações comportamentais"
+        title="Informações sobre resgate"
         text={pet.rescue_info}
       >
       </InfoBox>
