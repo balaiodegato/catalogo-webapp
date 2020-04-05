@@ -19,7 +19,6 @@ import MomentUtils from '@date-io/moment';
 
 import { yellow } from '@material-ui/core/colors';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
 
 import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
@@ -214,17 +213,16 @@ function InfoBox(props) {
 function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
-  const params = useParams()
 
   useEffect(() => {
     async function fetchPet() {
-      const pet = await Api.getPet(params.id);
+      const pet = await Api.getPet(props.petId);
       pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
       savePet(pet);
     }
     fetchPet();
   // eslint-disable-next-line
-  }, [params.id, dataTimestamp]);
+  }, [props.petId, dataTimestamp]);
 
   async function onSave(newValues) {
     savePet({...pet, ...newValues})

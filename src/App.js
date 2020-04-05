@@ -5,8 +5,14 @@ import Header from './app/components/Header'
 import { Route, Switch } from 'react-router-dom'
 import { Router } from 'react-router'
 import { createBrowserHistory } from 'history'
+import { useParams } from 'react-router-dom';
 
 const history = createBrowserHistory();
+
+function ParamDetails() {
+  const params = useParams()
+  return <Details petId={params.id}/>
+}
 
 function App() {
   return (
@@ -18,7 +24,7 @@ function App() {
           <PetList />
         </Route>
         <Route exact path="/details/:id">
-          <Details />
+          <ParamDetails/>
         </Route>
       </Switch>
 
