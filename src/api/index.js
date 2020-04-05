@@ -1,54 +1,34 @@
 
 import axios from 'axios';
 
-let petsDatabase = null;
-
-function parseCsvValue(value) {
-  if (value === "NULL") {
-    return null;
-  }
-
-  return value;
+const STATES = {
+  'Estrelinha': 'star',
+  'Para adoção': 'available',
+  'Adotado': 'adopted',
+  'Adotada': 'adopted',
+  'Residente': 'resident',
 }
 
-function buildObj(fields, values) {
-  const obj = {};
-  fields.forEach((field, index) => {
-    obj[field] = parseCsvValue(values[index]);
-  });
-  return obj;
-}
+const NULLABLE_KEYS = ['status', 'rescue_date', 'test_result', 'adoption_date']
 
-setTimeout(async () => {
-  const data = (await axios.get('/pets_data.csv')).data.split('\n');
-  const fields = data[0].split(',');
-  const database = {}
-  for (let row of data.slice(1)) {
-    if (row.length === 0) {
-      continue;
+function normalizePetData(petData) {
+  const pet = {...petData}
+  for (let key of Object.keys(pet)) {
+    if (NULLABLE_KEYS.includes(key) && !pet[key]) {
+      pet[key] = null
     }
-    const obj = buildObj(fields, row.split(','));
-    database[obj.id] = obj;
   }
 
-  const photos_data = (await axios.get('/pets_photos.csv')).data.split('\n');
-  const photos_fields = photos_data[0].split(',');
-  for (let row of photos_data.slice(1)) {
-    if (row.length === 0) {
-      continue;
-    }
-    const obj = buildObj(photos_fields, row.split(','));
-    database[obj.id].photo = obj.data;
+  if (STATES[pet.status]) {
+    pet.status = STATES[pet.status]
   }
 
-  petsDatabase = database;
-});
+  if (!pet.castration_date && pet.castrated === "Sim") {
+    pet.castration_date = '2010-01-01'
+  }
 
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, +ms));
+  return pet
 }
-
 
 class Api {
 
@@ -56,19 +36,20 @@ class Api {
 
   static async getPet(petId) {
     try {
-      return axios.get(`${this.BASE_URL}/${petId}`)
+      const req = await axios.get(`${this.BASE_URL}/${petId}`)
+      return normalizePetData(req.data)
     } catch(err) {
       console.warn('Erro ao requisitar Firebase: ', err);
     }
   }
 
   static async savePet(petId, data) {
-    await sleep(100);
-    petsDatabase[petId] = {
-      ...petsDatabase[petId],
-      ...data,
-    };
-    return petsDatabase[petId];
+    try {
+      const req = await axios.patch(`${this.BASE_URL}/${petId}`, data)
+      return req.data
+    } catch (err) {
+      console.error('Erro ao requisitar Firebase: ', err);
+    }
   }
 
   static getAllPets() {

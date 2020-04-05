@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import './Details.css';
 
-import Api from '../../../api/index';
+import Api from '../../../api';
 
 import Box from '@material-ui/core/Box';
 import TextField from '@material-ui/core/TextField';
@@ -19,18 +19,15 @@ import MomentUtils from '@date-io/moment';
 
 import { yellow } from '@material-ui/core/colors';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
 
-function ProfilePhoto(props) {
-  return <Box width={props.width} height={props.height} border={20} borderColor={yellow} borderRadius={20}>
-    <img width={props.width} height={props.height} alt="Foto do pet" src={props.src}></img>
-  </Box>;
-}
+import { useEditMode } from './hooks';
+import ProfilePhoto from './components/ProfilePhoto';
 
 const STATE_DESCRIPTIONS = {
-  "resident": "residente do abrigo",
-  "other_option1": "opção 1",
-  "other_option2": "opção 2",
+  'star': 'Estrelinha',
+  'available': 'Para adoção',
+  'adopted': 'Adotado',
+  'resident': 'Residente',
 };
 
 const TEST_RESULT_STRINGS = {
@@ -83,28 +80,6 @@ function EditableDateField(props) {
   />
 }
 
-function useEditMode(saveCallback) {
-  const [editMode, setEditMode] = useState(false);
-  const [editValues, setEditValues] = useState({});
-  function onValueChange(name, event) {
-    const value = (event && event.target && event.target.value) ? event.target.value : event;
-    setEditValues(editValues => ({
-      ...editValues,
-      [name]: value,
-    }));
-  }
-  function onSave() {
-    saveCallback(editValues);
-    setEditMode(false);
-  }
-  function onEdit() {
-    setEditValues({});
-    setEditMode(true);
-  }
-
-  return [editMode, onEdit, onValueChange, onSave];
-}
-
 function MainInfo(props) {
   const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave);
 
@@ -131,12 +106,12 @@ function MainInfo(props) {
             variant="outlined"
             autoWidth={true}
             label="Situação"
-            defaultValue={pet.current_state}
-            onChange={e => onValueChange('current_state', e)}>
+            defaultValue={pet.status}
+            onChange={e => onValueChange('status', e)}>
             {Object.keys(STATE_DESCRIPTIONS).map(code =>
               <option key={code} value={code}>{STATE_DESCRIPTIONS[code]}</option>)}
           </Select>
-          : <Box fontSize="25px">({STATE_DESCRIPTIONS[pet.current_state]})</Box>
+          : <Box fontSize="25px">({STATE_DESCRIPTIONS[pet.status]})</Box>
         }
       </Box>
       <Box fontSize="20px" marginTop="20px" display="flex" flexDirection="row">
@@ -239,12 +214,12 @@ function InfoBox(props) {
 function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
-  const params = useParams()
 
   useEffect(() => {
     async function fetchPet() {
-      const pet = await Api.getPet(params.id);
-      savePet(pet.data);
+      const pet = await Api.getPet(props.petId);
+      pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
+      savePet(pet);
     }
     fetchPet();
   // eslint-disable-next-line
@@ -259,17 +234,23 @@ function Details(props) {
   if (!pet) {
     return <Box>Loading</Box>
   }
-  
+
   return (
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
-          <ProfilePhoto /*src={`data:image/jpeg;base64,${[pet.photo]}`}*/ src={pet.img} width="200px" height="200px"></ProfilePhoto>
+          <ProfilePhoto
+            src={pet.img}
+            width={200}
+            height={200}
+            crop={pet.crop}
+            onSave={onSave}
+          ></ProfilePhoto>
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
       </MuiPickersUtilsProvider>
       <InfoBox
-        title="Informações comportamentais"
+        title="Informações sobre resgate"
         text={pet.rescue_info}
       >
       </InfoBox>
