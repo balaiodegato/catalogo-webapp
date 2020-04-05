@@ -1,8 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 import Details from './app/components/DetailsPage/Details.js';
-import AnimalList from './app/components/AnimalList/AnimalList';
+import PetList from './app/components/PetList/PetList';
 import Header from './app/components/Header'
 import { Route, Switch } from 'react-router-dom'
 import { Router } from 'react-router'
@@ -13,17 +11,14 @@ const history = createBrowserHistory();
 function App() {
   return (
     <Router history={history}>
-      <div className="App">
-        <Header />
-      </div>
+      <Header />
 
       <Switch>
-        <Route exact path="/details">
-          <Details/>
-          <Details petId={1}/>
+        <Route exact path="/">
+          <PetList />
         </Route>
-        <Route exact path="/animals">
-          <AnimalList />
+        <Route exact path="/details/:id">
+          <Details />
         </Route>
       </Switch>
 

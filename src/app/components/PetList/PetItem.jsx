@@ -1,77 +1,73 @@
 import React from 'react';
-import { Grid, Box, Paper, Typography } from '@material-ui/core';
+import { Grid, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { useHistory } from 'react-router-dom'
+import catPhotoDefault from '../../../assets/cat-default-photo.jpg'
+import dogPhotoDefault from '../../../assets/dog-default-photo.jpg'
 
-export const AnimalItem = (props) => {
+export function PetItem({ pet }) {
 
-    const { animal } = props
     const classes = useStyles()
-    
-    const informationTestClass = {
-        'Negativo': classes.infoTesteNegativo,
-        'Positivo': classes.infoTestePositivo
-    }
+    const history = useHistory()
 
     const statusClass = {
         'Adotado': classes.statusIndicatorAdotado,
-        'ParaAdocao': classes.statusIndicatorParaAdocao,
-        'DaCasa': classes.statusIndicatorDaCasa
+        'Estrelinha': classes.statusIndicatorEstrelinha,
+        'Residente': classes.statusIndicatorResidente,
+        'Para adoção': classes.statusIndicatorAdocao
+    }
+
+    const navigateToDetails = () => {
+        history.push(`/details/${pet.id}`)
     }
 
     return (
-        <Grid 
+        <Grid
             container
             className={classes.container}
+            onClick={() => navigateToDetails()}
         >
             <Paper
                 className={classes.paper}
             >
                 <GridData className={classes.gridItem}>
                     <Grid
+                        item
                         xs={4}
                     >
                         <Box
-                            className={statusClass[animal.status]}
+                            className={statusClass[pet.status]}
                         ></Box>
                     </Grid>
-                    
+
                     <Grid
                         xs={8}
+                        item
                     >
-                        <img 
-                            width='80'
-                            height='80'
-                            src='https://abrilsuperinteressante.files.wordpress.com/2018/05/filhotes-de-cachorro-alcanc3a7am-o-c3a1pice-de-fofura-com-8-semanas1.png'
-                            alt="FotoAnimal"
+                        <PetPhoto
+                            src={pet.img ? pet.img : getDefaultPhoto(pet)}
                         />
                     </Grid>
                 </GridData>
-                
-                <GridData className={{ ...classes.gridItem, fontWeight: '600' }}>
-                    {animal.name}
+
+                <GridData className={classes.gridItemBold}>
+                    {pet.name}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {animal.dataResgate}
+                    {pet.rescue_date}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {animal.dataAdocao}
+                    {pet.adoption_date}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {animal.dataCastracao}
+                    {pet.castrated}
                 </GridData>
 
-                <GridData className={classes.gridTesteItem}>
-                    <Typography
-                        className={informationTestClass[animal.infoTeste]}
-                    >
-                        {animal.infoTeste}
-                    </Typography>
-                    <Typography>
-                        {animal.dataTeste}
-                    </Typography>
+                <GridData className={classes.gridItem}>
+                    {pet.test_result}
                 </GridData>
 
             </Paper>
@@ -79,9 +75,20 @@ export const AnimalItem = (props) => {
     )
 }
 
-const GridData = (props) => {
+function getDefaultPhoto(pet) {
+    switch(pet.kind) {
+        case 'cat':
+            return catPhotoDefault
+        case 'dog':
+            return dogPhotoDefault
+        default:
+            return null
+    }
+}
+
+function GridData(props) {
     const { className, children } = props
-    
+
     return (
         <Grid
             item
@@ -89,8 +96,20 @@ const GridData = (props) => {
             sm={12}
             className={className}
         >
-            { children }
+            {children ? children : '-'}
         </Grid>
+    )
+}
+
+function PetPhoto({ src }) {
+
+    return (
+        <img
+            width='80'
+            height='80'
+            src={src}
+            alt="FotoPet"
+        />
     )
 }
 
@@ -113,41 +132,41 @@ const useStyles = makeStyles(theme => ({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    gridTesteItem: {
+    gridItemBold: {
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    infoTesteNegativo: {
-        fontWeight: 600,
-        color: '#11b726'
-    },
-    infoTestePositivo: {
-        fontWeight: 600,
-        color: '#ff1414'
+        fontWeight: '600'
     },
     statusIndicatorAdotado: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'yellow',
+        backgroundColor: '#92a8d1',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
-    statusIndicatorParaAdocao: {
+    statusIndicatorEstrelinha: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'purple',
+        backgroundColor: '#f2a994',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
-    statusIndicatorDaCasa: {
+    statusIndicatorResidente: {
         height: '100px',
         width: '10px',
-        backgroundColor: 'green',
+        backgroundColor: '#007239',
+        borderTopLeftRadius: '10px',
+        borderBottomLeftRadius: '10px'
+    },
+    statusIndicatorAdocao: {
+        height: '100px',
+        width: '10px',
+        backgroundColor: '#a0db8e',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     }
 }))
 
-export default AnimalItem
+export default PetItem
