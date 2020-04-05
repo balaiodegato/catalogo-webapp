@@ -2,8 +2,11 @@
 import axios from 'axios';
 
 const STATES = {
-    "Residente do abrigo": "resident",
-    "Para adoção": "available",
+  'Estrelinha': 'star',
+  'Para adoção': 'available',
+  'Adotado': 'adopted',
+  'Adotada': 'adopted',
+  'Residente': 'resident',
 }
 
 const NULLABLE_KEYS = ['status', 'rescue_date', 'test_result', 'adoption_date']

@@ -24,9 +24,10 @@ import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
 
 const STATE_DESCRIPTIONS = {
-  "resident": "residente do abrigo",
-  "other_option1": "opção 1",
-  "other_option2": "opção 2",
+  'star': 'Estrelinha',
+  'available': 'Para adoção',
+  'adopted': 'Adotado',
+  'resident': 'Residente',
 };
 
 const TEST_RESULT_STRINGS = {
@@ -105,12 +106,12 @@ function MainInfo(props) {
             variant="outlined"
             autoWidth={true}
             label="Situação"
-            defaultValue={pet.current_state}
-            onChange={e => onValueChange('current_state', e)}>
+            defaultValue={pet.status}
+            onChange={e => onValueChange('status', e)}>
             {Object.keys(STATE_DESCRIPTIONS).map(code =>
               <option key={code} value={code}>{STATE_DESCRIPTIONS[code]}</option>)}
           </Select>
-          : <Box fontSize="25px">({STATE_DESCRIPTIONS[pet.current_state]})</Box>
+          : <Box fontSize="25px">({STATE_DESCRIPTIONS[pet.status]})</Box>
         }
       </Box>
       <Box fontSize="20px" marginTop="20px" display="flex" flexDirection="row">
