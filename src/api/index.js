@@ -63,12 +63,12 @@ class Api {
   }
 
   static async savePet(petId, data) {
-    await sleep(100);
-    petsDatabase[petId] = {
-      ...petsDatabase[petId],
-      ...data,
-    };
-    return petsDatabase[petId];
+    try {
+      const req = await axios.patch(`${this.BASE_URL}/${petId}`, data)
+      return req.data
+    } catch (err) {
+      console.error('Erro ao requisitar Firebase: ', err);
+    }
   }
 
   static getAllPets() {
