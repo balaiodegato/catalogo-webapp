@@ -187,6 +187,10 @@ function MainInfo(props) {
 }
 
 function InfoBox(props) {
+  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave);
+
+  const classes = useStyles()
+
   return <Box
       width="970px"
       marginTop="20px"
@@ -204,9 +208,17 @@ function InfoBox(props) {
         borderColor="#FFFFFF"
         bgcolor="#FFFFFF"
         paddingLeft="15px"
+        className={classes.relativepos}
       >
+        {editMode ?
+          <Button color="primary" className={classes.editbutton} onClick={onSave}><SaveAltIcon ></SaveAltIcon></Button>
+          : <Button color="primary" className={classes.editbutton} onClick={onEdit}><EditIcon ></EditIcon></Button>
+        }
         <Box display="flex"><h2>{props.title}</h2></Box>
-        <Box display="flex"><p>{props.text}</p></Box>
+        {editMode ?
+          <TextField multiline fullWidth onChange={e => onValueChange('text', e)} label={props.title} variant="outlined" defaultValue={props.text}/>
+          : <Box display="flex"><p>{props.text}</p></Box>
+        }
       </Box>
   </Box>
 }
@@ -252,11 +264,13 @@ function Details(props) {
       <InfoBox
         title="Informações sobre resgate"
         text={pet.rescue_info}
+        onSave={data => onSave({rescue_info: data.text})}
       >
       </InfoBox>
       <InfoBox
         title="Informações comportamentais"
         text={pet.behaviour_info}
+        onSave={data => onSave({behaviour_info: data.text})}
       >
       </InfoBox>
     </Box>
