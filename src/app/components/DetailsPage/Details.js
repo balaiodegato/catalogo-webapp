@@ -22,6 +22,7 @@ import moment from 'moment';
 
 import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
+import { STATE_COLORS } from '../../../common';
 
 const STATE_DESCRIPTIONS = {
   'star': 'Estrelinha',
@@ -196,8 +197,8 @@ function InfoBox(props) {
       marginTop="20px"
       borderLeft={20}
       borderRadius={20}
-      borderColor={yellow}
-      bgcolor={yellow}
+      borderColor={props.borderColor}
+      bgcolor={props.borderColor}
       padding={0}
       paddingLeft="10px"
     >
@@ -257,6 +258,7 @@ function Details(props) {
             height={200}
             crop={pet.crop}
             onSave={onSave}
+            borderColor={STATE_COLORS[pet.status]}
           ></ProfilePhoto>
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
@@ -265,12 +267,14 @@ function Details(props) {
         title="Informações sobre resgate"
         text={pet.rescue_info}
         onSave={data => onSave({rescue_info: data.text})}
+        borderColor={STATE_COLORS[pet.status]}
       >
       </InfoBox>
       <InfoBox
         title="Informações comportamentais"
         text={pet.behaviour_info}
         onSave={data => onSave({behaviour_info: data.text})}
+        borderColor={STATE_COLORS[pet.status]}
       >
       </InfoBox>
     </Box>

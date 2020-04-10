@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
   box: {
     borderWidth: 20,
     borderStyle: 'solid',
-    borderColor: yellow[900],
+    borderColor: props => props.borderColor,
     borderRadius: 20,
     overflow: 'hidden',
     position: 'relative',
