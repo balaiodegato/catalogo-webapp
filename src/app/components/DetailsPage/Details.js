@@ -10,6 +10,8 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import EditIcon from '@material-ui/icons/Edit';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   MuiPickersUtilsProvider,
@@ -46,6 +48,10 @@ const useStyles = makeStyles(theme => ({
   },
   relativepos: {
     position: 'relative',
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
 }));
 
@@ -227,6 +233,8 @@ function InfoBox(props) {
 function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
+  const [loading, setLoading] = useState(false)
+  const classes = useStyles()
 
   useEffect(() => {
     async function fetchPet() {
@@ -240,8 +248,10 @@ function Details(props) {
 
   async function onSave(newValues) {
     savePet({...pet, ...newValues})
+    setLoading(true);
     await Api.savePet(pet.id, newValues);
     saveDataTimestamp(Date.now());
+    setLoading(false);
   }
 
   if (!pet) {
@@ -277,6 +287,9 @@ function Details(props) {
         borderColor={STATE_COLORS[pet.status]}
       >
       </InfoBox>
+      <Backdrop className={classes.backdrop} open={loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </Box>
   );
 }
