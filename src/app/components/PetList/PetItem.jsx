@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import catPhotoDefault from '../../../assets/cat-default-photo.jpg'
 import dogPhotoDefault from '../../../assets/dog-default-photo.jpg'
+import { STATE_COLORS } from '../../../common'
 
 export function PetItem({ pet }) {
 
@@ -142,28 +143,28 @@ const useStyles = makeStyles(theme => ({
     statusIndicatorAdotado: {
         height: '100px',
         width: '10px',
-        backgroundColor: '#92a8d1',
+        backgroundColor: STATE_COLORS.adopted,
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
     statusIndicatorEstrelinha: {
         height: '100px',
         width: '10px',
-        backgroundColor: '#f2a994',
+        backgroundColor: STATE_COLORS.star,
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
     statusIndicatorResidente: {
         height: '100px',
         width: '10px',
-        backgroundColor: '#007239',
+        backgroundColor: STATE_COLORS.resident,
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     },
     statusIndicatorAdocao: {
         height: '100px',
         width: '10px',
-        backgroundColor: '#a0db8e',
+        backgroundColor: STATE_COLORS.available,
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
     }

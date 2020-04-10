@@ -5,6 +5,7 @@ import { FilterButton } from './FilterButton';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Api from '../../../api/index'
+import { STATE_COLORS } from '../../../common'
 
 export const PetList = () => {
 
@@ -162,25 +163,25 @@ const useStyles = makeStyles(theme => ({
         width: '17px',
         height: '17px',
         marginRight: '5px',
-        backgroundColor: '#a0db8e'
+        backgroundColor: STATE_COLORS.available,
     },
     colorAdotado: {
         width: '17px',
         height: '17px',
         marginRight: '5px',
-        backgroundColor: '#92a8d1'
+        backgroundColor: STATE_COLORS.adopted,
     },
     colorResidente: {
         width: '17px',
         height: '17px',
         marginRight: '5px',
-        backgroundColor: '#007239'
+        backgroundColor: STATE_COLORS.resident,
     },
     colorEstrelinha: {
         width: '17px',
         height: '17px',
         marginRight: '5px',
-        backgroundColor: '#f2a994'
+        backgroundColor: STATE_COLORS.star,
     }
 }))
 
