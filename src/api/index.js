@@ -9,7 +9,34 @@ const STATES = {
   'Residente': 'resident',
 }
 
+const TEST_RESULT_STRINGS = {
+  cat: {
+    'Positivo fiv': 'fiv-positive',
+    'Positivo felv': 'felv-positive',
+    'Positivo fiv e felv': 'fiv-felv-positive',
+    'Negativo': 'negative',
+  },
+  dog: {
+    'Positivo leishmaniose': true,
+    'Negativo': false,
+  },
+}
+
+const TEST_RESULT_VALUES = {
+  cat: ['fiv-positive', 'felv-positive', 'fiv-felv-positive', 'negative'],
+  dog: [true, false],
+}
+
 const NULLABLE_KEYS = ['status', 'rescue_date', 'test_result', 'adoption_date']
+
+function normalizeField(value, string_values, valid_values) {
+  if (value && value.toLowerCase && string_values[value.toLowerCase()]) {
+    return string_values[value.toLowerCase()]
+  } else if (!valid_values.includes(value)) {
+    return null
+  }
+  return value
+}
 
 function normalizePetData(petData) {
   const pet = {...petData}
@@ -18,6 +45,9 @@ function normalizePetData(petData) {
       pet[key] = null
     }
   }
+
+  pet.test_result = normalizeField(
+    pet.test_result, TEST_RESULT_STRINGS[pet.kind], TEST_RESULT_VALUES[pet.kind])
 
   if (STATES[pet.status]) {
     pet.status = STATES[pet.status]

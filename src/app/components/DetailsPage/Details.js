@@ -34,8 +34,18 @@ const STATE_DESCRIPTIONS = {
 };
 
 const TEST_RESULT_STRINGS = {
-  "negative": "Negativo",
-  "positive": "Positivo",
+  cat: {
+    'fiv-positive': 'Positivo fiv',
+    'felv-positive': 'Positivo felv',
+    'fiv-felv-positive': 'Positivo fiv e felv',
+    'negative': 'Negativo',
+    null: 'Não testado',
+  },
+  dog: {
+    true: 'Positivo leishmaniose',
+    false: 'Negativo',
+    null: 'Não testado',
+  },
 }
 
 const useStyles = makeStyles(theme => ({
@@ -149,10 +159,12 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.test_result}
               onChange={e => onValueChange('test_result', e)}>
-              {Object.keys(TEST_RESULT_STRINGS).map(code =>
-                <option key={code} value={code}>{TEST_RESULT_STRINGS[code]}</option>)}
+              {Object.keys(TEST_RESULT_STRINGS[pet.kind]).map(code =>
+                <option key={code} value={code}>{TEST_RESULT_STRINGS[pet.kind][code]}</option>)}
             </Select>
-            : <Box display="flex" marginTop="10px"><span><b>Teste: </b> {TEST_RESULT_STRINGS[pet.test_result]}</span></Box>
+            : <Box display="flex" marginTop="10px">
+                <span><b>Teste: </b> {TEST_RESULT_STRINGS[pet.kind][pet.test_result]}</span>
+              </Box>
           }
         </Box>
         <Box marginLeft="20px" display="flex" flexDirection="column" justifyContent="flex-start" alignContent="flex-start">
