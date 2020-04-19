@@ -18,6 +18,9 @@ export default function CroppedImage(props) {
   const [crop, setCrop] = useState(props.crop)
 
   useEffect(() => {
+    if (!props.src) {
+      return
+    }
     const srcImage = new Image();
     srcImage.onload = () => {
       setCrop({
