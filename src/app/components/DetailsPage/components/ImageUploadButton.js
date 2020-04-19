@@ -12,19 +12,6 @@ const useStyles = makeStyles({
   },
 })
 
-function readFile(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-
-    reader.onload = function (e) {
-      let dataURL = e.target.result;
-      resolve(dataURL);
-    };
-
-    reader.readAsDataURL(file);
-  });
-}
-
 export default function ImageUploadButton(props) {
   const inputElement = useRef()
 
@@ -38,8 +25,7 @@ export default function ImageUploadButton(props) {
 
   async function onChange(e) {
     const files = e.target.files;
-    const dataUrl = await readFile(files[0]);
-    props.onUpload(dataUrl);
+    props.onUpload(files[0]);
   }
 
   const classes = useStyles(props);

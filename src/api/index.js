@@ -70,6 +70,19 @@ function normalizePetData(petData) {
   return pet
 }
 
+function readFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      let data = e.target.result;
+      resolve(data);
+    };
+
+    reader.readAsArrayBuffer(file);
+  });
+}
+
 class Api {
 
   static BASE_URL = 'https://us-central1-dataloadercatalogobalaiogato.cloudfunctions.net/api/v1/animals'
@@ -83,7 +96,24 @@ class Api {
     }
   }
 
+  static getPetOriginalPhotoUrl(petId) {
+    return `${this.BASE_URL}/${petId}/originalPhoto`
+  }
+
   static async savePet(petId, data) {
+    if (data.img) {
+      const imageBinaryData = await readFile(data.img);
+      await axios({
+        url: Api.getPetOriginalPhotoUrl(petId),
+        data: imageBinaryData,
+        method: 'PUT',
+        headers: {
+          'content-type': 'application/octet-stream'
+        },
+      })
+      data.img = Api.getPetOriginalPhotoUrl(petId)
+    }
+
     try {
       const req = await axios.patch(`${this.BASE_URL}/${petId}`, data)
       return req.data
