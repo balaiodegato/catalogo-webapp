@@ -130,6 +130,8 @@ function HeaderItem(props) {
 
 const useStyles = makeStyles(theme => ({
     containerHeader: {
+        position: 'sticky',
+        top: 0,
         height: '60px',
         padding: '5px'
     },
