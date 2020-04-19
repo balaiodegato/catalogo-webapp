@@ -9,6 +9,14 @@ const STATES = {
   'Residente': 'resident',
 }
 
+const GENDER_STRINGS = {
+  'fêmea': 'F',
+  'femea': 'F',
+  'macho': 'M',
+}
+
+const GENDER_VALUES = ['M', 'F']
+
 const TEST_RESULT_STRINGS = {
   cat: {
     'Positivo fiv': 'fiv-positive',
@@ -45,6 +53,8 @@ function normalizePetData(petData) {
       pet[key] = null
     }
   }
+
+  pet.gender = normalizeField(pet.gender, GENDER_STRINGS, GENDER_VALUES)
 
   pet.test_result = normalizeField(
     pet.test_result, TEST_RESULT_STRINGS[pet.kind], TEST_RESULT_VALUES[pet.kind])

@@ -26,6 +26,12 @@ import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
 import { STATE_COLORS } from '../../../common';
 
+const GENDER_MAP = {
+  'M': 'Macho',
+  'F': 'Fêmea',
+  null: '-',
+}
+
 const STATE_DESCRIPTIONS = {
   'star': 'Estrelinha',
   'available': 'Para adoção',
@@ -176,10 +182,11 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.gender}
               onChange={e => onValueChange('gender', e)}>
-              <option key='F' value='F'>Fêmea</option>
-              <option key='M' value='M'>Macho</option>
+              <option key='null' value={null}>{GENDER_MAP[null]}</option>
+              <option key='F' value='F'>{GENDER_MAP['F']}</option>
+              <option key='M' value='M'>{GENDER_MAP['M']}</option>
             </Select>
-            : <Box display="flex"><span><b>Sexo:</b> {pet.gender}</span></Box>
+            : <Box display="flex"><span><b>Sexo:</b> {GENDER_MAP[pet.gender]}</span></Box>
           }
           {editMode ?
             <EditableDateField
