@@ -47,10 +47,10 @@ export default function PhotoEditModal(props) {
     return false;
   };
 
-  function onUpload(dataUrl) {
-    setSrc(dataUrl);
+  function onUpload(file) {
+    setSrc(URL.createObjectURL(file));
 
-    props.onValueChange('img', dataUrl);
+    props.onValueChange('img', file);
   };
 
   return <Dialog onClose={() => props.onSave()} open={true}>
