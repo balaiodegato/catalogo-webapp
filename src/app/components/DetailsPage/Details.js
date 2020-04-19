@@ -26,6 +26,12 @@ import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
 import { STATE_COLORS } from '../../../common';
 
+const GENDER_MAP = {
+  'M': 'Macho',
+  'F': 'Fêmea',
+  null: '-',
+}
+
 const STATE_DESCRIPTIONS = {
   'star': 'Estrelinha',
   'available': 'Para adoção',
@@ -34,8 +40,18 @@ const STATE_DESCRIPTIONS = {
 };
 
 const TEST_RESULT_STRINGS = {
-  "negative": "Negativo",
-  "positive": "Positivo",
+  cat: {
+    'fiv-positive': 'Positivo fiv',
+    'felv-positive': 'Positivo felv',
+    'fiv-felv-positive': 'Positivo fiv e felv',
+    'negative': 'Negativo',
+    null: 'Não testado',
+  },
+  dog: {
+    true: 'Positivo leishmaniose',
+    false: 'Negativo',
+    null: 'Não testado',
+  },
 }
 
 const useStyles = makeStyles(theme => ({
@@ -149,10 +165,12 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.test_result}
               onChange={e => onValueChange('test_result', e)}>
-              {Object.keys(TEST_RESULT_STRINGS).map(code =>
-                <option key={code} value={code}>{TEST_RESULT_STRINGS[code]}</option>)}
+              {Object.keys(TEST_RESULT_STRINGS[pet.kind]).map(code =>
+                <option key={code} value={code}>{TEST_RESULT_STRINGS[pet.kind][code]}</option>)}
             </Select>
-            : <Box display="flex" marginTop="10px"><span><b>Teste: </b> {TEST_RESULT_STRINGS[pet.test_result]}</span></Box>
+            : <Box display="flex" marginTop="10px">
+                <span><b>Teste: </b> {TEST_RESULT_STRINGS[pet.kind][pet.test_result]}</span>
+              </Box>
           }
         </Box>
         <Box marginLeft="20px" display="flex" flexDirection="column" justifyContent="flex-start" alignContent="flex-start">
@@ -164,10 +182,11 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.gender}
               onChange={e => onValueChange('gender', e)}>
-              <option key='F' value='F'>Fêmea</option>
-              <option key='M' value='M'>Macho</option>
+              <option key='null' value={null}>{GENDER_MAP[null]}</option>
+              <option key='F' value='F'>{GENDER_MAP['F']}</option>
+              <option key='M' value='M'>{GENDER_MAP['M']}</option>
             </Select>
-            : <Box display="flex"><span><b>Sexo:</b> {pet.gender}</span></Box>
+            : <Box display="flex"><span><b>Sexo:</b> {GENDER_MAP[pet.gender]}</span></Box>
           }
           {editMode ?
             <EditableDateField
@@ -263,7 +282,7 @@ function Details(props) {
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
           <ProfilePhoto
-            src={pet.img}
+            src={pet.img || Api.getPetOriginalPhotoUrl(pet.id)}
             width={200}
             height={200}
             crop={pet.crop}
