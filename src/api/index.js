@@ -1,5 +1,6 @@
 
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 const STATES = {
   'Estrelinha': 'star',
@@ -100,6 +101,11 @@ class Api {
     return `${this.BASE_URL}/${petId}/originalPhoto`
   }
 
+  static getPetOriginalPhotoCachableUrl(petId) {
+    // Add cachekey query parameter to get a cachable URL
+    return Api.getPetOriginalPhotoUrl(petId) + '?cachekey=' + uuidv4()
+  }
+
   static async savePet(petId, data) {
     if (data.img) {
       const imageBinaryData = await readFile(data.img);
@@ -111,7 +117,7 @@ class Api {
           'content-type': 'application/octet-stream'
         },
       })
-      data.img = Api.getPetOriginalPhotoUrl(petId)
+      data.img = Api.getPetOriginalPhotoCachableUrl(petId)
     }
 
     try {
