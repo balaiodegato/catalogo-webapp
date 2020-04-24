@@ -1,17 +1,18 @@
 import React from 'react'
 import paw from '../../../assets/paw.png'
-import menuburguer from '../../../assets/menuburguer.png'
+import { Link } from 'react-router-dom'
 import './styles.css'
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-// import { faSearch } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 const Header = () => {
     return (
         <div className='header'>
-            <img src={menuburguer} alt='menu-icon' className='menuburguer'/>
-            <h1 className='title'>
-                CATÁLOGO DE ANIMAIS    
-            </h1>
+            <Link style={styles.title} to="/">
+                <h1 className='title'>
+                    CATÁLOGO DE ANIMAIS    
+                </h1>
+            </Link>
             <img src={paw} alt='paw' className='paw'/>
             
             {/* <div className='search-box'>
@@ -20,6 +21,12 @@ const Header = () => {
             </div> */}
         </div>
     )
+}
+
+const styles = {
+    title: {
+        textDecoration: 'none'
+    }
 }
 
 
