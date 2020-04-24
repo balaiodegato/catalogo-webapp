@@ -12,10 +12,10 @@ export function PetItem({ pet }) {
     const history = useHistory()
 
     const statusClass = {
-        'Adotado': classes.statusIndicatorAdotado,
-        'Estrelinha': classes.statusIndicatorEstrelinha,
-        'Residente': classes.statusIndicatorResidente,
-        'Para adoção': classes.statusIndicatorAdocao
+        'Adotado': [classes.statusIndicator, classes.statusIndicatorAdotado],
+        'Estrelinha': [classes.statusIndicator, classes.statusIndicatorEstrelinha],
+        'Residente': [classes.statusIndicator, classes.statusIndicatorResidente],
+        'Para adoção': [classes.statusIndicator, classes.statusIndicatorAdocao]
     }
 
     const navigateToDetails = () => {
@@ -140,33 +140,24 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center',
         fontWeight: '600'
     },
-    statusIndicatorAdotado: {
+
+    statusIndicator: {
         height: '100px',
-        width: '10px',
-        backgroundColor: STATE_COLORS.adopted,
+        width: '80px',
         borderTopLeftRadius: '10px',
         borderBottomLeftRadius: '10px'
+    },
+    statusIndicatorAdotado: {
+        backgroundColor: STATE_COLORS.adopted,
     },
     statusIndicatorEstrelinha: {
-        height: '100px',
-        width: '10px',
         backgroundColor: STATE_COLORS.star,
-        borderTopLeftRadius: '10px',
-        borderBottomLeftRadius: '10px'
     },
     statusIndicatorResidente: {
-        height: '100px',
-        width: '10px',
         backgroundColor: STATE_COLORS.resident,
-        borderTopLeftRadius: '10px',
-        borderBottomLeftRadius: '10px'
     },
     statusIndicatorAdocao: {
-        height: '100px',
-        width: '10px',
         backgroundColor: STATE_COLORS.available,
-        borderTopLeftRadius: '10px',
-        borderBottomLeftRadius: '10px'
     }
 }))
 
