@@ -97,27 +97,31 @@ class Api {
     }
   }
 
-  static getPetOriginalPhotoUrl(petId) {
-    return `${this.BASE_URL}/${petId}/originalPhoto`
+  static getPetPhotoUrl(petId, size) {
+    return `${this.BASE_URL}/${petId}/photos/${size}`
   }
 
-  static getPetOriginalPhotoCachableUrl(petId) {
+  static getPetPhotoCachableUrl(petId, size) {
     // Add cachekey query parameter to get a cachable URL
-    return Api.getPetOriginalPhotoUrl(petId) + '?cachekey=' + uuidv4()
+    return Api.getPetPhotoUrl(petId, size) + '?cachekey=' + uuidv4()
+  }
+
+  static async uploadPhoto(petId, size, file) {
+    const imageBinaryData = await readFile(file);
+    await axios({
+      url: Api.getPetPhotoUrl(petId, size),
+      data: imageBinaryData,
+      method: 'PUT',
+      headers: {
+        'content-type': 'application/octet-stream'
+      },
+    })
+    return Api.getPetPhotoCachableUrl(petId, size)
   }
 
   static async savePet(petId, data) {
     if (data.img) {
-      const imageBinaryData = await readFile(data.img);
-      await axios({
-        url: Api.getPetOriginalPhotoUrl(petId),
-        data: imageBinaryData,
-        method: 'PUT',
-        headers: {
-          'content-type': 'application/octet-stream'
-        },
-      })
-      data.img = Api.getPetOriginalPhotoCachableUrl(petId)
+      data.img = await Api.uploadPhoto(petId, 'original', data.img)
     }
 
     try {
