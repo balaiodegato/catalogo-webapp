@@ -121,7 +121,13 @@ class Api {
 
   static async savePet(petId, data) {
     if (data.img) {
-      data.img = await Api.uploadPhoto(petId, 'original', data.img)
+      data.img = await Api.uploadPhoto(petId, 'small', data.img)
+    }
+    if (data.img_original) {
+      data.img_original = await Api.uploadPhoto(petId, 'original', data.img_original)
+    }
+    if (data.img_medium) {
+      data.img_medium = await Api.uploadPhoto(petId, 'medium', data.img_medium)
     }
 
     try {

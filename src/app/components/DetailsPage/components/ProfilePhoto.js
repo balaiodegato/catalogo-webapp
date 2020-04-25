@@ -44,7 +44,7 @@ function ProfilePhoto(props) {
   return (<div>
     {editMode &&
       <PhotoEditModal
-        src={props.src}
+        src={props.originalSrc}
         crop={props.crop}
         onValueChange={onValueChange}
         onSave={onSave}
@@ -56,8 +56,7 @@ function ProfilePhoto(props) {
           <EditIcon ></EditIcon>
         </Button>
       }
-      <CroppedImage src={props.src} width={props.width} height={props.height} crop={props.crop}>
-      </CroppedImage>
+      <img src={props.src} width={props.width} height={props.height} alt='animal'/>
     </Box>
   </div>);
 }
