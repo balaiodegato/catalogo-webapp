@@ -1,7 +1,7 @@
 import React from 'react';
 import Details from './app/components/DetailsPage/Details.js';
 import PetList from './app/components/PetList/PetList';
-import Header from './app/components/Header'
+import Header from './app/components/Header/Header'
 import { Route, Switch } from 'react-router-dom'
 import { Router } from 'react-router'
 import { createBrowserHistory } from 'history'
