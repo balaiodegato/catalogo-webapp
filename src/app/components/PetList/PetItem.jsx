@@ -12,10 +12,10 @@ export function PetItem({ pet }) {
     const history = useHistory()
 
     const statusClass = {
-        'Adotado': [classes.statusIndicator, classes.statusIndicatorAdotado],
-        'Estrelinha': [classes.statusIndicator, classes.statusIndicatorEstrelinha],
-        'Residente': [classes.statusIndicator, classes.statusIndicatorResidente],
-        'Para adoção': [classes.statusIndicator, classes.statusIndicatorAdocao]
+        'Adotado': { ...classes.statusIndicator, ...classes.statusIndicatorAdotado },
+        'Estrelinha': { ...classes.statusIndicator, ...classes.statusIndicatorEstrelinha },
+        'Residente': { ...classes.statusIndicator, ...classes.statusIndicatorResidente },
+        'Para adoção': { ...classes.statusIndicator, ...classes.statusIndicatorAdocao }
     }
 
     const navigateToDetails = () => {
