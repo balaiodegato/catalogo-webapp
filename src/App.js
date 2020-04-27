@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Details from './app/components/DetailsPage/Details.js';
 import PetList from './app/components/PetList/PetList';
 import Header from './app/components/Header/Header'
@@ -15,13 +15,15 @@ function ParamDetails() {
 }
 
 function App() {
+  const [filter, setFilter] = useState('')
+
   return (
     <Router history={history}>
-      <Header />
+      <Header filter={filter} setFilter={setFilter} />
 
       <Switch>
         <Route exact path="/">
-          <PetList />
+          <PetList filter={filter} />
         </Route>
         <Route exact path="/details/:id">
           <ParamDetails/>

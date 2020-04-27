@@ -1,11 +1,13 @@
 import React from 'react'
-import paw from '../../../assets/paw.png'
 import { useHistory } from 'react-router-dom'
-import logo from '../../../assets/logo.png'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
-const Header = () => {
+import paw from '../../../assets/paw.png'
+import logo from '../../../assets/logo.png'
+
+
+const Header = ({ filter, setFilter }) => {
     const history = useHistory()
 
     const navigateToHome = () => {
@@ -14,20 +16,24 @@ const Header = () => {
 
     return (
         <div style={styles.header}>
-            <img style={styles.logo} src={logo} onClick={navigateToHome} />
+            <img style={styles.logo} src={logo} alt="logo balaio de gato" onClick={navigateToHome} />
             <h1 style={styles.title} onClick={navigateToHome}>
                 CATÁLOGO DE ANIMAIS    
             </h1>
 
-            <img src={paw} alt='paw' style={styles.paw}/>
-            
+            <img src={paw} alt='patinha' style={styles.paw}/>
+
             <div style={styles.searchContainer}>
                 <FontAwesomeIcon icon={faSearch} style={styles.searchIcon}/>
-                <input id="searchInput" style={styles.input} type='text' placeholder='PESQUISE AQUI'/>
+                <input 
+                    id="searchInput" 
+                    style={styles.input} 
+                    type='text' 
+                    placeholder='PESQUISE AQUI'
+                    value={filter}
+                    onChange={e => setFilter(e.target.value)}
+                />
             </div>
-            {/* <div className='search-box'>
-                <FontAwesomeIcon icon={faSearch} className='search-icon'/>
-            </div> */}
         </div>
     )
 }
@@ -62,8 +68,6 @@ const styles = {
         padding: '10px',
         borderRadius: '25px',
         width: '16vw',
-        position: 'relative',
-        top: '30px',
         marginLeft: '4vw'
     },
     searchIcon: {
@@ -77,7 +81,6 @@ const styles = {
         width: '15vw',
         color: 'white'
     }
-
 }
 
 export default Header

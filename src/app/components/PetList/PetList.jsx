@@ -3,16 +3,14 @@ import { Grid, Paper } from '@material-ui/core';
 import { PetItem } from './PetItem';
 import { FilterButton } from './FilterButton';
 import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
 import Api from '../../../api/index'
 import { STATE_COLORS } from '../../../common'
 
-export const PetList = () => {
+export const PetList = ({ filter }) => {
 
     const classes = useStyles()
     const [pets, setPets] = useState([])
     const [filteredPets, setFilteredPets] = useState([])
-    const [filter, setFilter] = useState('')
 
     useEffect(() => {
         const fetchData = async () => {
@@ -72,13 +70,6 @@ export const PetList = () => {
                     item
                     xs={6}
                 >
-                    <TextField 
-                        className={classes.searchInput}
-                        label='Pesquise pelo nome do pet' 
-                        color='primary' 
-                        value={filter} 
-                        onChange={(e) => { setFilter(e.target.value) }}
-                    />
                     <FilterButton filterPets={filterKindPets} />
                 </Grid>
                 <Grid
@@ -128,16 +119,12 @@ function HeaderItem(props) {
     )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
     containerHeader: {
         position: 'sticky',
         top: 0,
         height: '60px',
         padding: '5px'
-    },
-    searchInput: {
-        margin: '5px',
-        width: '20vw'
     },
     actionsGrid: {
         display: 'flex',
