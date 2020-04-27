@@ -66,22 +66,16 @@ export const PetList = ({ filter }) => {
                 xs={12}
                 className={classes.actionsGrid}
             >
-                <Grid
-                    item
-                    xs={6}
-                >
-                    <FilterButton filterPets={filterKindPets} />
-                </Grid>
-                <Grid
-                    item
-                    xs={6}
-                    className={classes.gridLabelStatus}
-                >
-                    <span className={classes.labelStatus}><div className={classes.colorParaAdocao}></div>Para Adoção</span>
-                    <span className={classes.labelStatus}><div className={classes.colorAdotado}></div>Adotado</span>
-                    <span className={classes.labelStatus}><div className={classes.colorResidente}></div>Residente</span>
-                    <span className={classes.labelStatus}><div className={classes.colorEstrelinha}></div>Estrelinha</span>
-                </Grid>
+                    <div>
+                        <FilterButton filterPets={filterKindPets} />
+                    </div>
+
+                    <div>
+                        <span className={classes.labelStatus}><div className={classes.colorParaAdocao}></div>Para Adoção</span>
+                        <span className={classes.labelStatus}><div className={classes.colorAdotado}></div>Adotado</span>
+                        <span className={classes.labelStatus}><div className={classes.colorResidente}></div>Residente</span>
+                        <span className={classes.labelStatus}><div className={classes.colorEstrelinha}></div>Estrelinha</span>
+                    </div>
             </Grid>
 
             <Grid
@@ -128,6 +122,7 @@ const useStyles = makeStyles(() => ({
     },
     actionsGrid: {
         display: 'flex',
+        justifyContent: 'space-between',
         margin: '20px'
     },
     paperHeader: {
@@ -143,33 +138,36 @@ const useStyles = makeStyles(() => ({
     gridLabelStatus: {
         display: 'flex',
         flexDirection: 'column',
-        justifyContent: 'space-around'
+        justifyContent: 'space-around',
+        alignItems: 'flex-end'
     },
     labelStatus: {
-        display: 'flex'
+        display: 'flex',
+        flexDirection: 'row-reverse',
+        marginRight: '4vw'
     },
     colorParaAdocao: {
         width: '17px',
         height: '17px',
-        marginRight: '5px',
+        margin: '0 5px',
         backgroundColor: STATE_COLORS.available,
     },
     colorAdotado: {
         width: '17px',
         height: '17px',
-        marginRight: '5px',
+        margin: '0 5px',
         backgroundColor: STATE_COLORS.adopted,
     },
     colorResidente: {
         width: '17px',
         height: '17px',
-        marginRight: '5px',
+        margin: '0 5px',
         backgroundColor: STATE_COLORS.resident,
     },
     colorEstrelinha: {
         width: '17px',
         height: '17px',
-        marginRight: '5px',
+        margin: '0 5px',
         backgroundColor: STATE_COLORS.star,
     }
 }))
