@@ -140,7 +140,7 @@ class Api {
 
   static getAllPets() {
     try {
-      return axios.get(this.BASE_URL)
+      return axios.get(this.BASE_URL + '?cache=true')
     } catch(err) {
       console.warn('Erro ao requisitar Firebase: ', err);
     }
