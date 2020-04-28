@@ -285,15 +285,17 @@ function Sponsorship(props) {
           : <Button color="primary" className={classes.editbutton} onClick={onEdit}><EditIcon ></EditIcon></Button>
         }
         <Box display="flex"><h2>Apadrinhamento</h2></Box>
-        <Checkbox
-          checked={editMode ? editChecked : !!props.text}
-          color="primary"
-          disabled
-        />
-        {editMode ?
-          <TextField onChange={onTextChange} variant="outlined" defaultValue={props.text}/>
-          : <Box display="flex"><p>{props.text}</p></Box>
-        }
+        <Box display="flex">
+          <Checkbox
+            checked={editMode ? editChecked : !!props.text}
+            color="primary"
+            disabled
+          />
+          {editMode ?
+            <Box flexGrow={1}><TextField fullWidth flexGrow={1} onChange={onTextChange} variant="outlined" defaultValue={props.text}/></Box>
+            : <Box display="flex"><p>{props.text}</p></Box>
+          }
+        </Box>
       </Box>
   </Box>
 }
