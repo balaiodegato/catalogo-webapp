@@ -68,6 +68,10 @@ function normalizePetData(petData) {
     pet.castration_date = '2010-01-01'
   }
 
+  pet.rescue_info = String(pet.rescue_info)
+  pet.behaviour_info = String(pet.behaviour_info)
+  pet.sponsorship = String(pet.sponsorship)
+
   return pet
 }
 
