@@ -5,7 +5,11 @@ export function useEditMode(saveCallback) {
   const [editMode, setEditMode] = useState(false);
   const editValues = useRef({});
   function onValueChange(name, event) {
-    const value = (event && event.target && event.target.value) ? event.target.value : event;
+    const value = (
+      event &&
+      event.target &&
+      event.target.value !== undefined
+    ) ? event.target.value : event;
     editValues.current = {
       ...editValues.current,
       [name]: value,
