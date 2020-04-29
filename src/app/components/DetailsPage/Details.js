@@ -12,6 +12,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   MuiPickersUtilsProvider,
@@ -249,6 +250,56 @@ function InfoBox(props) {
   </Box>
 }
 
+function Sponsorship(props) {
+  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave);
+  const [editChecked, setEditChecked] = useState(!!props.text)
+
+  const classes = useStyles()
+
+  function onTextChange(e) {
+    setEditChecked(!!e.target.value)
+    onValueChange('text', e.target.value)
+  }
+
+  return <Box
+      width="970px"
+      marginTop="20px"
+      borderLeft={20}
+      borderRadius={20}
+      borderColor={props.borderColor}
+      bgcolor={props.borderColor}
+      padding={0}
+      paddingLeft="10px"
+    >
+      <Box
+        border={20}
+        borderLeft={0}
+        borderRadius={20}
+        borderColor="#FFFFFF"
+        bgcolor="#FFFFFF"
+        paddingLeft="15px"
+        className={classes.relativepos}
+      >
+        {editMode ?
+          <Button color="primary" className={classes.editbutton} onClick={onSave}><SaveAltIcon ></SaveAltIcon></Button>
+          : <Button color="primary" className={classes.editbutton} onClick={onEdit}><EditIcon ></EditIcon></Button>
+        }
+        <Box display="flex"><h2>Apadrinhamento</h2></Box>
+        <Box display="flex">
+          <Checkbox
+            checked={editMode ? editChecked : !!props.text}
+            color="primary"
+            disabled
+          />
+          {editMode ?
+            <Box flexGrow={1}><TextField fullWidth flexGrow={1} onChange={onTextChange} variant="outlined" defaultValue={props.text}/></Box>
+            : <Box display="flex"><p>{props.text}</p></Box>
+          }
+        </Box>
+      </Box>
+  </Box>
+}
+
 function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
@@ -307,6 +358,12 @@ function Details(props) {
         borderColor={STATE_COLORS[pet.status]}
       >
       </InfoBox>
+      <Sponsorship
+        text={pet.sponsorship}
+        onSave={data => onSave({sponsorship: data.text})}
+        borderColor={STATE_COLORS[pet.status]}
+      >
+      </Sponsorship>
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
