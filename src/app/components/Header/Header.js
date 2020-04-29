@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSearch } from '@fortawesome/free-solid-svg-icons'
@@ -15,72 +16,87 @@ const Header = ({ filter, setFilter }) => {
     }
 
     return (
-        <div style={styles.header}>
-            <img style={styles.logo} src={logo} alt="logo balaio de gato" onClick={navigateToHome} />
-            <h1 style={styles.title} onClick={navigateToHome}>
+        <HeaderContainer>
+            <Logo onClick={navigateToHome}/>
+            <Title onClick={navigateToHome}>
                 CATÁLOGO DE ANIMAIS    
-            </h1>
+            </Title>
 
-            <img src={paw} alt='patinha' style={styles.paw}/>
+            <Paw />
 
-            <div style={styles.searchContainer}>
-                <FontAwesomeIcon icon={faSearch} style={styles.searchIcon}/>
-                <input 
-                    id="searchInput" 
-                    style={styles.input} 
-                    type='text' 
-                    placeholder='PESQUISE AQUI'
+            <SearchContainer>
+                <SearchIcon/>
+                <SearchInput 
                     value={filter}
                     onChange={e => setFilter(e.target.value)}
                 />
-            </div>
-        </div>
+            </SearchContainer>
+        </HeaderContainer>
     )
 }
 
-const styles = {
-    title: {
-        cursor: 'pointer',
-        color: 'white',
-        margin: 0
-    },
-    logo: {
-        cursor: 'pointer',
-        width: '70px',
-        height: '70px',
-        marginRight: '2rem',
-        marginLeft: '1rem'
-    },
-    header: {
-        backgroundColor: '#b7cd00',
-        display: 'flex',
-        alignItems: 'center',
-        height: '70px',
-        width: '100vw',
-    },
-    paw: {
-        marginLeft: '2rem'
-    },
-    searchContainer: {
-        display: 'flex',
-        flexDirection: 'row',
-        backgroundColor: '#0772d3',
-        padding: '10px',
-        borderRadius: '25px',
-        width: '16vw',
-        marginLeft: '4vw'
-    },
-    searchIcon: {
-        color: 'white',
-        marginRight: '8px'
-    },
-    input: {
-        outline: 'none',
-        backgroundColor: '#0772d3',
-        border: 'none',
-        width: '15vw',
-        color: 'white'
+const HeaderContainer = styled.div`
+    background-color: #b7cd00;
+    display: flex;
+    align-items: center;
+    height: 70px;
+    width: 100vw;
+`
+
+const Logo = styled.img.attrs({
+    src: logo,
+    alt: 'logo balaio de gato',
+})`
+    cursor: pointer;
+    width: 70px;
+    height: 70px;
+    margin-right: 2rem;
+    margin-left: 1rem;
+`
+
+const Title = styled.h1`
+    cursor: pointer;
+    color: white;
+    margin: 0;
+`
+
+const Paw = styled.img.attrs({
+    src: paw,
+    alt: 'patinha'
+})`
+    margin-left: 2rem;
+`
+
+const SearchContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    background-color: #0772d3;
+    padding: 10px;
+    border-radius: 25px;
+    width: 16vw;
+    margin-left: 4vw;
+`
+
+const SearchIcon = styled(FontAwesomeIcon).attrs({
+    icon: faSearch
+})`
+    color: white;
+    margin-right: 8px;
+`
+
+const SearchInput = styled.input.attrs({
+    type: 'text',
+    placeholder: 'PESQUISE AQUI'
+})`
+    ::placeholder {
+        color: white;
     }
-}
+
+    outline: none;
+    background-color: #0772d3;
+    border: none;
+    width: 15vw;
+    color: white;
+`
 
 export default Header

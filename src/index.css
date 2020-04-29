@@ -1,16 +1,11 @@
+* {
+  font-family: Lato;
+}
+
 body {
   margin: 0;
   font-family: Lato;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #8080800a;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-#searchInput::placeholder {
-  color: white
 }
