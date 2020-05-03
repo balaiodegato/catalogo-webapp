@@ -1,14 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSearch } from '@fortawesome/free-solid-svg-icons'
 
 import paw from '../../../assets/paw.png'
 import logo from '../../../assets/logo.png'
 
 
-const Header = ({ filter, setFilter }) => {
+const Header = () => {
     const history = useHistory()
 
     const navigateToHome = () => {
@@ -23,14 +21,6 @@ const Header = ({ filter, setFilter }) => {
             </Title>
 
             <Paw />
-
-            <SearchContainer>
-                <SearchIcon/>
-                <SearchInput 
-                    value={filter}
-                    onChange={e => setFilter(e.target.value)}
-                />
-            </SearchContainer>
         </HeaderContainer>
     )
 }
@@ -65,38 +55,6 @@ const Paw = styled.img.attrs({
     alt: 'patinha'
 })`
     margin-left: 2rem;
-`
-
-const SearchContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    background-color: #0772d3;
-    padding: 10px;
-    border-radius: 25px;
-    width: 16vw;
-    margin-left: 4vw;
-`
-
-const SearchIcon = styled(FontAwesomeIcon).attrs({
-    icon: faSearch
-})`
-    color: white;
-    margin-right: 8px;
-`
-
-const SearchInput = styled.input.attrs({
-    type: 'text',
-    placeholder: 'PESQUISE AQUI'
-})`
-    ::placeholder {
-        color: white;
-    }
-
-    outline: none;
-    background-color: #0772d3;
-    border: none;
-    width: 15vw;
-    color: white;
 `
 
 export default Header
