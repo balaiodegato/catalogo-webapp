@@ -19,3 +19,8 @@ export const STATE_LABELS = {
   'adopted': 'Adotado',
   'resident': 'Residente',
 }
+
+export const KINDS = {
+  cat: 'cat',
+  dog: 'dog'
+}
