@@ -1,32 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useContext } from 'react';
+import { Router, Route, Switch, useParams } from 'react-router-dom'
+import { createBrowserHistory } from 'history'
+
 import Details from './app/components/DetailsPage/Details.js';
 import PetList from './app/components/PetList/PetList';
 import Header from './app/components/Header/Header'
-import { Route, Switch } from 'react-router-dom'
-import { Router } from 'react-router'
-import { createBrowserHistory } from 'history'
-import { useParams } from 'react-router-dom';
+
+import { AppContext, ACTIONS } from './AppContext';
+import { petsMock, allPetsMock } from './Pets.mock'
+import Api from './api';
 
 const history = createBrowserHistory();
 
 function ParamDetails() {
   const params = useParams()
-  return <Details petId={params.id}/>
+  return <Details petId={params.id} />
 }
 
 function App() {
-  const [filter, setFilter] = useState('')
+  const { dispatch } = useContext(AppContext)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await Api.getAllPets()
+      // const response = { data: allPetsMock }
+      
+      dispatch({
+        type: ACTIONS.SET_PETS,
+        payload: response.data
+      })
+    }
+    fetchData()
+  }, [])
 
   return (
     <Router history={history}>
-      <Header filter={filter} setFilter={setFilter} />
+      <Header />
 
       <Switch>
         <Route exact path="/">
-          <PetList filter={filter} />
+          <PetList />
         </Route>
         <Route exact path="/details/:id">
-          <ParamDetails/>
+          <ParamDetails />
         </Route>
       </Switch>
 
