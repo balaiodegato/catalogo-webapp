@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 import catPhotoDefault from '../../../assets/cat-default-photo.jpg'
 import dogPhotoDefault from '../../../assets/dog-default-photo.jpg'
-import { STATE_COLORS } from '../../../common'
+import { STATES, STATE_COLORS, KINDS } from '../../../common'
 
 export function PetItem({ pet }) {
 
@@ -12,10 +12,10 @@ export function PetItem({ pet }) {
     const history = useHistory()
 
     const statusClass = {
-        'Adotado': `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
-        'Estrelinha': `${classes.statusIndicator} ${classes.statusIndicatorEstrelinha}`,
-        'Residente': `${classes.statusIndicator} ${classes.statusIndicatorResidente}`,
-        'Para adoção': `${classes.statusIndicator} ${classes.statusIndicatorAdocao }`
+        [STATES.adopted]: `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
+        [STATES.star]: `${classes.statusIndicator} ${classes.statusIndicatorEstrelinha}`,
+        [STATES.resident]: `${classes.statusIndicator} ${classes.statusIndicatorResidente}`,
+        [STATES.available]: `${classes.statusIndicator} ${classes.statusIndicatorAdocao }`
     }
 
     const navigateToDetails = () => {
@@ -79,9 +79,9 @@ export function PetItem({ pet }) {
 
 function getDefaultPhoto(pet) {
     switch(pet.kind) {
-        case 'cat':
+        case KINDS.cat:
             return catPhotoDefault
-        case 'dog':
+        case KINDS.dog:
             return dogPhotoDefault
         default:
             return null

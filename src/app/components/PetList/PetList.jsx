@@ -1,37 +1,24 @@
-import React, { useState, useEffect } from "react";
-import { Grid, Paper } from '@material-ui/core';
-import { PetItem } from './PetItem';
-import { FilterButton } from './FilterButton';
-import { makeStyles } from '@material-ui/core/styles';
-import Api from '../../../api/index'
-import { STATE_COLORS } from '../../../common'
+import React, { useState, useEffect, useContext } from 'react'
+import styled from 'styled-components'
+import { Grid, Paper } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
 
-export const PetList = ({ filter }) => {
+import { PetItem } from './PetItem'
+import Filters from './Filters'
+import { AppContext, ACTIONS } from '../../../AppContext'
+import { STATES } from '../../../common'
+
+export const PetList = () => {
+    const { state, dispatch } = useContext(AppContext)
 
     const classes = useStyles()
-    const [pets, setPets] = useState([])
     const [filteredPets, setFilteredPets] = useState([])
 
     useEffect(() => {
-        const fetchData = async () => {
-            const response = await Api.getAllPets()
-
-            const orderedPets = sortPets(response.data)
-            setPets(orderedPets)
-            setFilteredPets(orderedPets)
-        }
-        fetchData()
-    }, [])
-
-    useEffect(() => {
-        if(filter.length >= 3) {
-            const orderedPets = sortPets(filteredPets.filter(pet => pet.name.includes(filter)))
-            setFilteredPets(orderedPets)
-        } else if(filter.length === 0) {
-            setFilteredPets(pets)
-        }
-    
-    }, [filter])
+        const pets = filterPets(state.pets, state.filter)
+        const orderedPets = sortPets(pets)
+        setFilteredPets(orderedPets);
+    }, [state.pets, state.filter])
 
     const headers = [
         { key: '1', label: 'Nome' },
@@ -41,16 +28,25 @@ export const PetList = ({ filter }) => {
         { key: '5', label: 'Teste' }
     ]
 
-    function filterKindPets(kind) {
-        const filteredPets = pets.filter(pet => pet.kind === kind)
-        setFilteredPets(sortPets(filteredPets))
+    function filterPets(pets, filter) {
+        if (filter.name !== '') {
+            pets = pets.filter(pet =>
+                normalize(pet.name)
+                    .includes(
+                        normalize(state.filter.name)
+                    )
+            )
+        }
+
+        return pets.filter(pet => pet.kind === filter.kind)
+            .filter(pet => pet.status === filter.status)
     }
 
     function sortPets(pets) {
-        const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === 'Para adoção'))
-        const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === 'Adotado'))
-        const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === 'Residente'))
-        const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === 'Estrelinha'))
+        const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === STATES.available))
+        const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === STATES.adopted))
+        const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === STATES.resident))
+        const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === STATES.star))
 
         return [...petsParaAdocao, ...petsAdotados, ...petsResidentes, ...petsEstrelinha]
     }
@@ -59,25 +55,23 @@ export const PetList = ({ filter }) => {
         return pets.sort((a, b) => a.name > b.name ? 1 : -1)
     }
 
+    function setFilter(filter) {
+        dispatch({
+            type: ACTIONS.SET_FILTER,
+            payload: filter
+        });
+    }
+
+    function normalize(str) {
+        return str
+            .replace(/[^a-zA-Z ]/g, '')
+            .toLowerCase()
+    }
+
     return (
         <Grid container>
-            <Grid
-                item
-                xs={12}
-                className={classes.actionsGrid}
-            >
-                    <div>
-                        <FilterButton filterPets={filterKindPets} />
-                    </div>
 
-                    <div>
-                        <span className={classes.labelStatus}><div className={classes.colorParaAdocao}></div>Para Adoção</span>
-                        <span className={classes.labelStatus}><div className={classes.colorAdotado}></div>Adotado</span>
-                        <span className={classes.labelStatus}><div className={classes.colorResidente}></div>Residente</span>
-                        <span className={classes.labelStatus}><div className={classes.colorEstrelinha}></div>Estrelinha</span>
-                    </div>
-            </Grid>
-
+            <Filters filter={state.filter} setFilter={setFilter} />
             <Grid
                 item
                 xs={2}
@@ -134,41 +128,6 @@ const useStyles = makeStyles(() => ({
         borderRadius: '10px',
         height: '100%',
         fontWeight: '600'
-    },
-    gridLabelStatus: {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-around',
-        alignItems: 'flex-end'
-    },
-    labelStatus: {
-        display: 'flex',
-        flexDirection: 'row-reverse',
-        marginRight: '4vw'
-    },
-    colorParaAdocao: {
-        width: '17px',
-        height: '17px',
-        margin: '0 5px',
-        backgroundColor: STATE_COLORS.available,
-    },
-    colorAdotado: {
-        width: '17px',
-        height: '17px',
-        margin: '0 5px',
-        backgroundColor: STATE_COLORS.adopted,
-    },
-    colorResidente: {
-        width: '17px',
-        height: '17px',
-        margin: '0 5px',
-        backgroundColor: STATE_COLORS.resident,
-    },
-    colorEstrelinha: {
-        width: '17px',
-        height: '17px',
-        margin: '0 5px',
-        backgroundColor: STATE_COLORS.star,
     }
 }))
 
