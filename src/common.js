@@ -50,3 +50,8 @@ export const DEFAULT_PHOTOS = {
   'dog': dogPhotoDefault,
   'cat': catPhotoDefault,
 }
+
+export const KIND_LABELS = {
+  'dog': 'Cão',
+  'cat': 'Gato',
+}
