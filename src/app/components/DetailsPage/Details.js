@@ -25,35 +25,12 @@ import moment from 'moment';
 
 import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
-import { STATE_COLORS } from '../../../common';
-
-const GENDER_MAP = {
-  'M': 'Macho',
-  'F': 'Fêmea',
-  null: '-',
-}
-
-const STATE_DESCRIPTIONS = {
-  'star': 'Estrelinha',
-  'available': 'Para adoção',
-  'adopted': 'Adotado',
-  'resident': 'Residente',
-};
-
-const TEST_RESULT_STRINGS = {
-  cat: {
-    'fiv-positive': 'Positivo fiv',
-    'felv-positive': 'Positivo felv',
-    'fiv-felv-positive': 'Positivo fiv e felv',
-    'negative': 'Negativo',
-    null: 'Não testado',
-  },
-  dog: {
-    true: 'Positivo leishmaniose',
-    false: 'Negativo',
-    null: 'Não testado',
-  },
-}
+import {
+  STATE_COLORS,
+  STATE_LABELS,
+  GENDER_LABELS,
+  TEST_RESULT_LABELS,
+} from '../../../common';
 
 const useStyles = makeStyles(theme => ({
   editbutton: {
@@ -132,10 +109,10 @@ function MainInfo(props) {
             label="Situação"
             defaultValue={pet.status}
             onChange={e => onValueChange('status', e)}>
-            {Object.keys(STATE_DESCRIPTIONS).map(code =>
-              <option key={code} value={code}>{STATE_DESCRIPTIONS[code]}</option>)}
+            {Object.keys(STATE_LABELS).map(code =>
+              <option key={code} value={code}>{STATE_LABELS[code]}</option>)}
           </Select>
-          : <Box fontSize="25px">({STATE_DESCRIPTIONS[pet.status]})</Box>
+          : <Box fontSize="25px">({STATE_LABELS[pet.status]})</Box>
         }
       </Box>
       <Box fontSize="20px" marginTop="20px" display="flex" flexDirection="row">
@@ -166,11 +143,11 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.test_result}
               onChange={e => onValueChange('test_result', e)}>
-              {Object.keys(TEST_RESULT_STRINGS[pet.kind]).map(code =>
-                <option key={code} value={code}>{TEST_RESULT_STRINGS[pet.kind][code]}</option>)}
+              {Object.keys(TEST_RESULT_LABELS[pet.kind]).map(code =>
+                <option key={code} value={code}>{TEST_RESULT_LABELS[pet.kind][code]}</option>)}
             </Select>
             : <Box display="flex" marginTop="10px">
-                <span><b>Teste: </b> {TEST_RESULT_STRINGS[pet.kind][pet.test_result]}</span>
+                <span><b>Teste: </b> {TEST_RESULT_LABELS[pet.kind][pet.test_result]}</span>
               </Box>
           }
         </Box>
@@ -183,11 +160,11 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.gender}
               onChange={e => onValueChange('gender', e)}>
-              <option key='null' value={null}>{GENDER_MAP[null]}</option>
-              <option key='F' value='F'>{GENDER_MAP['F']}</option>
-              <option key='M' value='M'>{GENDER_MAP['M']}</option>
+              <option key='null' value={null}>{GENDER_LABELS[null]}</option>
+              <option key='F' value='F'>{GENDER_LABELS['F']}</option>
+              <option key='M' value='M'>{GENDER_LABELS['M']}</option>
             </Select>
-            : <Box display="flex"><span><b>Sexo:</b> {GENDER_MAP[pet.gender]}</span></Box>
+            : <Box display="flex"><span><b>Sexo:</b> {GENDER_LABELS[pet.gender]}</span></Box>
           }
           {editMode ?
             <EditableDateField
