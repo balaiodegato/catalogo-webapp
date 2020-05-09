@@ -1,8 +1,8 @@
 
 import { useState, useRef } from 'react';
 
-export function useEditMode(saveCallback) {
-  const [editMode, setEditMode] = useState(false);
+export function useEditMode(saveCallback, initialValue) {
+  const [editMode, setEditMode] = useState(!!initialValue);
   const editValues = useRef({});
   function onValueChange(name, event) {
     const value = (

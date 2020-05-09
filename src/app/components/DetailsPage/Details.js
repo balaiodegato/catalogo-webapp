@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import './Details.css';
 
 import Api from '../../../api';
@@ -25,35 +26,14 @@ import moment from 'moment';
 
 import { useEditMode } from './hooks';
 import ProfilePhoto from './components/ProfilePhoto';
-import { STATE_COLORS } from '../../../common';
-
-const GENDER_MAP = {
-  'M': 'Macho',
-  'F': 'Fêmea',
-  null: '-',
-}
-
-const STATE_DESCRIPTIONS = {
-  'star': 'Estrelinha',
-  'available': 'Para adoção',
-  'adopted': 'Adotado',
-  'resident': 'Residente',
-};
-
-const TEST_RESULT_STRINGS = {
-  cat: {
-    'fiv-positive': 'Positivo fiv',
-    'felv-positive': 'Positivo felv',
-    'fiv-felv-positive': 'Positivo fiv e felv',
-    'negative': 'Negativo',
-    null: 'Não testado',
-  },
-  dog: {
-    true: 'Positivo leishmaniose',
-    false: 'Negativo',
-    null: 'Não testado',
-  },
-}
+import {
+  STATE_COLORS,
+  STATE_LABELS,
+  GENDER_LABELS,
+  TEST_RESULT_LABELS,
+  VALID_KINDS,
+  DEFAULT_PHOTOS,
+} from '../../../common';
 
 const useStyles = makeStyles(theme => ({
   editbutton: {
@@ -105,7 +85,7 @@ function EditableDateField(props) {
 }
 
 function MainInfo(props) {
-  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave);
+  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave, !props.pet.id);
 
   const classes = useStyles()
 
@@ -132,10 +112,10 @@ function MainInfo(props) {
             label="Situação"
             defaultValue={pet.status}
             onChange={e => onValueChange('status', e)}>
-            {Object.keys(STATE_DESCRIPTIONS).map(code =>
-              <option key={code} value={code}>{STATE_DESCRIPTIONS[code]}</option>)}
+            {Object.keys(STATE_LABELS).map(code =>
+              <option key={code} value={code}>{STATE_LABELS[code]}</option>)}
           </Select>
-          : <Box fontSize="25px">({STATE_DESCRIPTIONS[pet.status]})</Box>
+          : <Box fontSize="25px">({STATE_LABELS[pet.status]})</Box>
         }
       </Box>
       <Box fontSize="20px" marginTop="20px" display="flex" flexDirection="row">
@@ -166,11 +146,11 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.test_result}
               onChange={e => onValueChange('test_result', e)}>
-              {Object.keys(TEST_RESULT_STRINGS[pet.kind]).map(code =>
-                <option key={code} value={code}>{TEST_RESULT_STRINGS[pet.kind][code]}</option>)}
+              {Object.keys(TEST_RESULT_LABELS[pet.kind]).map(code =>
+                <option key={code} value={code}>{TEST_RESULT_LABELS[pet.kind][code]}</option>)}
             </Select>
             : <Box display="flex" marginTop="10px">
-                <span><b>Teste: </b> {TEST_RESULT_STRINGS[pet.kind][pet.test_result]}</span>
+                <span><b>Teste: </b> {TEST_RESULT_LABELS[pet.kind][pet.test_result]}</span>
               </Box>
           }
         </Box>
@@ -183,11 +163,11 @@ function MainInfo(props) {
               label="Teste"
               defaultValue={pet.gender}
               onChange={e => onValueChange('gender', e)}>
-              <option key='null' value={null}>{GENDER_MAP[null]}</option>
-              <option key='F' value='F'>{GENDER_MAP['F']}</option>
-              <option key='M' value='M'>{GENDER_MAP['M']}</option>
+              <option key='null' value={null}>{GENDER_LABELS[null]}</option>
+              <option key='F' value='F'>{GENDER_LABELS['F']}</option>
+              <option key='M' value='M'>{GENDER_LABELS['M']}</option>
             </Select>
-            : <Box display="flex"><span><b>Sexo:</b> {GENDER_MAP[pet.gender]}</span></Box>
+            : <Box display="flex"><span><b>Sexo:</b> {GENDER_LABELS[pet.gender]}</span></Box>
           }
           {editMode ?
             <EditableDateField
@@ -304,24 +284,36 @@ function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
   const [loading, setLoading] = useState(false)
+  const history = useHistory()
   const classes = useStyles()
 
   useEffect(() => {
     async function fetchPet() {
-      const pet = await Api.getPet(props.petId);
-      pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
-      savePet(pet);
+      if (props.petId) {
+        const pet = await Api.getPet(props.petId);
+        console.log(props.petId, pet)
+        pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
+        savePet(pet);
+      } else if (props.petId === null && VALID_KINDS.includes(props.kind)) {
+        savePet({kind: props.kind})
+      }
     }
     fetchPet();
   // eslint-disable-next-line
   }, [props.petId, dataTimestamp]);
 
   async function onSave(newValues) {
-    savePet({...pet, ...newValues})
-    setLoading(true);
-    await Api.savePet(pet.id, newValues);
-    saveDataTimestamp(Date.now());
-    setLoading(false);
+    if (props.petId === null) {
+      setLoading(true);
+      const newPet = await Api.createPet({...newValues, kind: props.kind})
+      history.push('/details/' + newPet.id);
+    } else {
+      savePet({...pet, ...newValues})
+      setLoading(true);
+      await Api.savePet(pet.id, newValues);
+      saveDataTimestamp(Date.now());
+      setLoading(false);
+    }
   }
 
   if (!pet) {
@@ -332,38 +324,45 @@ function Details(props) {
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
-          <ProfilePhoto
-            src={pet.img_medium || pet.img || pet.img_original}
-            originalSrc={pet.img_original || pet.img}
-            width={200}
-            height={200}
-            crop={pet.crop}
-            onSave={onSave}
-            borderColor={STATE_COLORS[pet.status]}
-          ></ProfilePhoto>
+          { pet.id &&
+            <ProfilePhoto
+              src={pet.img_medium || pet.img || pet.img_original || DEFAULT_PHOTOS[pet.kind]}
+              originalSrc={pet.img_original || pet.img}
+              width={200}
+              height={200}
+              crop={pet.crop}
+              onSave={onSave}
+              borderColor={STATE_COLORS[pet.status]}
+            ></ProfilePhoto>
+          }
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
       </MuiPickersUtilsProvider>
-      <InfoBox
-        title="Informações sobre resgate"
-        text={pet.rescue_info}
-        onSave={data => onSave({rescue_info: data.text})}
-        borderColor={STATE_COLORS[pet.status]}
-      >
-      </InfoBox>
-      <InfoBox
-        title="Informações comportamentais"
-        text={pet.behaviour_info}
-        onSave={data => onSave({behaviour_info: data.text})}
-        borderColor={STATE_COLORS[pet.status]}
-      >
-      </InfoBox>
-      <Sponsorship
-        text={pet.sponsorship}
-        onSave={data => onSave({sponsorship: data.text})}
-        borderColor={STATE_COLORS[pet.status]}
-      >
-      </Sponsorship>
+      {
+        pet.id &&
+        <>
+          <InfoBox
+            title="Informações sobre resgate"
+            text={pet.rescue_info}
+            onSave={data => onSave({rescue_info: data.text})}
+            borderColor={STATE_COLORS[pet.status]}
+          >
+          </InfoBox>
+          <InfoBox
+            title="Informações comportamentais"
+            text={pet.behaviour_info}
+            onSave={data => onSave({behaviour_info: data.text})}
+            borderColor={STATE_COLORS[pet.status]}
+          >
+          </InfoBox>
+          <Sponsorship
+            text={pet.sponsorship}
+            onSave={data => onSave({sponsorship: data.text})}
+            borderColor={STATE_COLORS[pet.status]}
+          >
+          </Sponsorship>
+        </>
+      }
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>
