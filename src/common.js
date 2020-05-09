@@ -40,3 +40,5 @@ export const TEST_RESULT_LABELS = {
     null: 'Não testado',
   },
 }
+
+export const VALID_KINDS = ['dog', 'cat']

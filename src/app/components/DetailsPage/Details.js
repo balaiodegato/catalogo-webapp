@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import './Details.css';
 
 import Api from '../../../api';
@@ -30,6 +31,7 @@ import {
   STATE_LABELS,
   GENDER_LABELS,
   TEST_RESULT_LABELS,
+  VALID_KINDS,
 } from '../../../common';
 
 const useStyles = makeStyles(theme => ({
@@ -82,7 +84,7 @@ function EditableDateField(props) {
 }
 
 function MainInfo(props) {
-  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave);
+  const [editMode, onEdit, onValueChange, onSave] = useEditMode(props.onSave, !props.pet.id);
 
   const classes = useStyles()
 
@@ -281,24 +283,36 @@ function Details(props) {
   const [pet, savePet] = useState(null)
   const [dataTimestamp, saveDataTimestamp] = useState(Date.now())
   const [loading, setLoading] = useState(false)
+  const history = useHistory()
   const classes = useStyles()
 
   useEffect(() => {
     async function fetchPet() {
-      const pet = await Api.getPet(props.petId);
-      pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
-      savePet(pet);
+      if (props.petId) {
+        const pet = await Api.getPet(props.petId);
+        console.log(props.petId, pet)
+        pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
+        savePet(pet);
+      } else if (props.petId === null && VALID_KINDS.includes(props.kind)) {
+        savePet({kind: props.kind})
+      }
     }
     fetchPet();
   // eslint-disable-next-line
   }, [props.petId, dataTimestamp]);
 
   async function onSave(newValues) {
-    savePet({...pet, ...newValues})
-    setLoading(true);
-    await Api.savePet(pet.id, newValues);
-    saveDataTimestamp(Date.now());
-    setLoading(false);
+    if (props.petId === null) {
+      setLoading(true);
+      const newPet = await Api.createPet({...newValues, kind: props.kind})
+      history.push('/details/' + newPet.id);
+    } else {
+      savePet({...pet, ...newValues})
+      setLoading(true);
+      await Api.savePet(pet.id, newValues);
+      saveDataTimestamp(Date.now());
+      setLoading(false);
+    }
   }
 
   if (!pet) {
@@ -309,38 +323,45 @@ function Details(props) {
     <Box padding="20px" display="flex" flexDirection="column" alignItems="center" justifyContent="center" bgcolor="#EEEEEE">
       <MuiPickersUtilsProvider utils={MomentUtils}>
         <Box width="1000px" display="flex" justifyContent="center">
-          <ProfilePhoto
-            src={pet.img_medium || pet.img || pet.img_original}
-            originalSrc={pet.img_original || pet.img}
-            width={200}
-            height={200}
-            crop={pet.crop}
-            onSave={onSave}
-            borderColor={STATE_COLORS[pet.status]}
-          ></ProfilePhoto>
+          { pet.id &&
+            <ProfilePhoto
+              src={pet.img_medium || pet.img || pet.img_original}
+              originalSrc={pet.img_original || pet.img}
+              width={200}
+              height={200}
+              crop={pet.crop}
+              onSave={onSave}
+              borderColor={STATE_COLORS[pet.status]}
+            ></ProfilePhoto>
+          }
           <MainInfo pet={pet} onSave={onSave}></MainInfo>
         </Box>
       </MuiPickersUtilsProvider>
-      <InfoBox
-        title="Informações sobre resgate"
-        text={pet.rescue_info}
-        onSave={data => onSave({rescue_info: data.text})}
-        borderColor={STATE_COLORS[pet.status]}
-      >
-      </InfoBox>
-      <InfoBox
-        title="Informações comportamentais"
-        text={pet.behaviour_info}
-        onSave={data => onSave({behaviour_info: data.text})}
-        borderColor={STATE_COLORS[pet.status]}
-      >
-      </InfoBox>
-      <Sponsorship
-        text={pet.sponsorship}
-        onSave={data => onSave({sponsorship: data.text})}
-        borderColor={STATE_COLORS[pet.status]}
-      >
-      </Sponsorship>
+      {
+        pet.id &&
+        <>
+          <InfoBox
+            title="Informações sobre resgate"
+            text={pet.rescue_info}
+            onSave={data => onSave({rescue_info: data.text})}
+            borderColor={STATE_COLORS[pet.status]}
+          >
+          </InfoBox>
+          <InfoBox
+            title="Informações comportamentais"
+            text={pet.behaviour_info}
+            onSave={data => onSave({behaviour_info: data.text})}
+            borderColor={STATE_COLORS[pet.status]}
+          >
+          </InfoBox>
+          <Sponsorship
+            text={pet.sponsorship}
+            onSave={data => onSave({sponsorship: data.text})}
+            borderColor={STATE_COLORS[pet.status]}
+          >
+          </Sponsorship>
+        </>
+      }
       <Backdrop className={classes.backdrop} open={loading}>
         <CircularProgress color="inherit" />
       </Backdrop>

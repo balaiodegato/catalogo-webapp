@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import { VALID_KINDS } from '../common';
 
 const STATES = {
   'Estrelinha': 'star',
@@ -53,6 +54,10 @@ function normalizePetData(petData) {
     if (NULLABLE_KEYS.includes(key) && !pet[key]) {
       pet[key] = null
     }
+  }
+
+  if (!VALID_KINDS.includes(pet.kind)) {
+    pet.kind = 'cat'
   }
 
   pet.gender = normalizeField(pet.gender, GENDER_STRINGS, GENDER_VALUES)
@@ -136,6 +141,15 @@ class Api {
 
     try {
       const req = await axios.patch(`${this.BASE_URL}/${petId}`, data)
+      return req.data
+    } catch (err) {
+      console.error('Erro ao requisitar Firebase: ', err);
+    }
+  }
+
+  static async createPet(data) {
+    try {
+      const req = await axios.post(`${this.BASE_URL}`, data)
       return req.data
     } catch (err) {
       console.error('Erro ao requisitar Firebase: ', err);
