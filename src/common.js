@@ -1,4 +1,7 @@
 
+import catPhotoDefault from './assets/cat-default-photo.jpg'
+import dogPhotoDefault from './assets/dog-default-photo.jpg'
+
 export const STATES = {
   'star': 'star',
   'available': 'available',
@@ -42,3 +45,8 @@ export const TEST_RESULT_LABELS = {
 }
 
 export const VALID_KINDS = ['dog', 'cat']
+
+export const DEFAULT_PHOTOS = {
+  'dog': dogPhotoDefault,
+  'cat': catPhotoDefault,
+}

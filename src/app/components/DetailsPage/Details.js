@@ -32,6 +32,7 @@ import {
   GENDER_LABELS,
   TEST_RESULT_LABELS,
   VALID_KINDS,
+  DEFAULT_PHOTOS,
 } from '../../../common';
 
 const useStyles = makeStyles(theme => ({
@@ -325,7 +326,7 @@ function Details(props) {
         <Box width="1000px" display="flex" justifyContent="center">
           { pet.id &&
             <ProfilePhoto
-              src={pet.img_medium || pet.img || pet.img_original}
+              src={pet.img_medium || pet.img || pet.img_original || DEFAULT_PHOTOS[pet.kind]}
               originalSrc={pet.img_original || pet.img}
               width={200}
               height={200}
