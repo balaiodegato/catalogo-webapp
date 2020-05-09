@@ -37,7 +37,7 @@ export function PetItem({ pet }) {
                         xs={4}
                     >
                         <Box
-                            className={statusClass[pet.status]}
+                            // className={statusClass[pet.status]}
                         ></Box>
                     </Grid>
 

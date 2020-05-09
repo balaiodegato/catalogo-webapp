@@ -10,6 +10,9 @@ import Api from '../../../api/index'
 import { STATE_COLORS, VALID_KINDS, KIND_LABELS } from '../../../common'
 import { useHistory } from 'react-router';
 
+import { FixedSizeList as List } from 'react-window';
+import AutoSizer from 'react-virtualized-auto-sizer';
+
 export const PetList = ({ filter }) => {
 
     const classes = useStyles()
@@ -69,7 +72,7 @@ export const PetList = ({ filter }) => {
         history.push('/newpet/' + filteredKind)
     }
 
-    return <div>
+    return <>
         { VALID_KINDS.includes(filteredKind) &&
           <Tooltip title={`Adicionar ${KIND_LABELS[filteredKind]}`} aria-label='add'>
             <Fab className={classes.addButton} onClick={openNewPet} color='primary' aria-label='add'>
@@ -77,7 +80,7 @@ export const PetList = ({ filter }) => {
             </Fab>
           </Tooltip>
         }
-        <Grid container>
+        <Grid className={classes.rootGrid} container>
             <Grid
                 item
                 xs={12}
@@ -102,15 +105,27 @@ export const PetList = ({ filter }) => {
             ></Grid>
 
             {headers.map(header => (
-                <HeaderItem key={header.key} classes={classes} header={header}></HeaderItem>
+              <HeaderItem key={header.key} classes={classes} header={header}></HeaderItem>
             ))}
 
-            {filteredPets.map(pet => (
-                <PetItem key={pet.id} pet={pet} />
-            ))}
+            {/* <AutoSizer>
+              {({height, width}) => ( */}
+                <List
+                    height={600}
+                    itemCount={filteredPets.length}
+                    itemSize={35}
+                    width={1200}
+                >
+                    {({index}) => {
+                      const pet = filteredPets[index]
+                      return <PetItem key={pet.id} pet={pet} />
+                    }}
+                </List>
+              {/* )}
+            </AutoSizer> */}
 
         </Grid>
-    </div>
+    </>
 }
 
 function HeaderItem(props) {
@@ -131,6 +146,10 @@ function HeaderItem(props) {
 }
 
 const useStyles = makeStyles(() => ({
+    rootGrid: {
+      // 'height': '100%',
+      // 'min-height': '100vh',
+    },
     containerHeader: {
         position: 'sticky',
         top: 0,
