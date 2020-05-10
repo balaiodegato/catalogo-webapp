@@ -13,47 +13,47 @@ import Api from './api';
 const history = createBrowserHistory();
 
 function ParamDetails() {
-  const params = useParams()
-  return <Details petId={params.id} />
+    const params = useParams()
+    return <Details petId={params.id} />
 }
 
 function App() {
-  const { dispatch } = useContext(AppContext)
+    const { dispatch } = useContext(AppContext)
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await Api.getAllPets()
-      // const response = { data: allPetsMock }
-      
-      dispatch({
-        type: ACTIONS.SET_PETS,
-        payload: response.data
-      })
-    }
-    fetchData()
-  }, [])
+    useEffect(() => {
+        const fetchData = async () => {
+            const response = await Api.getAllPets()
+            // const response = { data: allPetsMock }
+            
+            dispatch({
+                type: ACTIONS.SET_PETS,
+                payload: response.data
+            })
+        }
+        fetchData()
+    }, [])
 
-  return (
-    <Router history={history}>
-      <Header />
+    return (
+        <Router history={history}>
+            <Header />
 
-      <Switch>
-        <Route exact path="/">
-          <PetList />
-        </Route>
-        <Route exact path="/newpet/dog">
-          <Details petId={null} kind='dog'/>
-        </Route>
-        <Route exact path="/newpet/cat">
-          <Details petId={null} kind='cat'/>
-        </Route>
-        <Route exact path="/details/:id">
-          <ParamDetails />
-        </Route>
-      </Switch>
+            <Switch>
+                <Route exact path="/">
+                    <PetList />
+                </Route>
+                <Route exact path="/newpet/dog">
+                    <Details petId={null} kind='dog' />
+                </Route>
+                <Route exact path="/newpet/cat">
+                    <Details petId={null} kind='cat' />
+                </Route>
+                <Route exact path="/details/:id">
+                    <ParamDetails />
+                </Route>
+            </Switch>
 
-    </Router>
-  )
+        </Router>
+    )
 }
 
 export default App;

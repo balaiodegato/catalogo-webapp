@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Grid, Paper } from '@material-ui/core';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import Tooltip from '@material-ui/core/Tooltip';
-import { PetItem } from './PetItem';
-import { FilterButton } from './FilterButton';
 import { makeStyles } from '@material-ui/core/styles';
-import Api from '../../../api/index'
-import { STATE_COLORS, VALID_KINDS, KIND_LABELS } from '../../../common'
 import { useHistory } from 'react-router';
 
 import { PetItem } from './PetItem'
 import Filters from './Filters'
 import { AppContext, ACTIONS } from '../../../AppContext'
-import { STATES } from '../../../common'
+import { VALID_STATES, STATE_COLORS, VALID_KINDS, KIND_LABELS } from '../../../common'
 
 export const PetList = () => {
     const { state, dispatch } = useContext(AppContext)
@@ -27,6 +23,7 @@ export const PetList = () => {
         const pets = filterPets(state.pets, state.filter)
         const orderedPets = sortPets(pets)
         setFilteredPets(orderedPets);
+        setFilteredKind(state.filter.kind)
     }, [state.pets, state.filter])
 
     const headers = [
@@ -48,14 +45,23 @@ export const PetList = () => {
         }
 
         return pets.filter(pet => pet.kind === filter.kind)
-            .filter(pet => pet.status === filter.status)
+            .filter(pet => VALID_STATES[filter.status].includes(pet.status)) //TEMP
+            // Retornar esse código quando normalizar o status dos pets
+            // .filter(pet => filter.status === pet.status)
     }
 
     function sortPets(pets) {
-        const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === STATES.available))
-        const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === STATES.adopted))
-        const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === STATES.resident))
-        const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === STATES.star))
+        // Retornar esse código quando normalizar o status dos pets
+        // const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === STATES.available))
+        // const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === STATES.adopted))
+        // const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === STATES.resident))
+        // const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === STATES.star))
+
+        // TEMP
+        const petsParaAdocao = sortPetsByName(pets.filter(pet => VALID_STATES.available.includes(pet.status)))
+        const petsAdotados = sortPetsByName(pets.filter(pet => VALID_STATES.adopted.includes(pet.status)))
+        const petsResidentes = sortPetsByName(pets.filter(pet => VALID_STATES.resident.includes(pet.status)))
+        const petsEstrelinha = sortPetsByName(pets.filter(pet => VALID_STATES.star.includes(pet.status)))
 
         return [...petsParaAdocao, ...petsAdotados, ...petsResidentes, ...petsEstrelinha]
     }
