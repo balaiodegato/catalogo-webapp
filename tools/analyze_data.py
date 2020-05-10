@@ -11,7 +11,7 @@ for entry in data:
   for key, value in entry.items():
     if key not in values_sets:
       values_sets[key] = set()
-    if key == 'crop':
+    if key == 'crop' or type(value) == type({}):
       value = json.dumps(value)
     values_sets[key].add(value)
 
