@@ -1,7 +1,14 @@
-import React, { useState, useEffect, useContext } from 'react'
-import styled from 'styled-components'
-import { Grid, Paper } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from "react";
+import { Grid, Paper } from '@material-ui/core';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import Tooltip from '@material-ui/core/Tooltip';
+import { PetItem } from './PetItem';
+import { FilterButton } from './FilterButton';
+import { makeStyles } from '@material-ui/core/styles';
+import Api from '../../../api/index'
+import { STATE_COLORS, VALID_KINDS, KIND_LABELS } from '../../../common'
+import { useHistory } from 'react-router';
 
 import { PetItem } from './PetItem'
 import Filters from './Filters'
@@ -13,6 +20,8 @@ export const PetList = () => {
 
     const classes = useStyles()
     const [filteredPets, setFilteredPets] = useState([])
+    const [filteredKind, setFilteredKind] = useState(null)
+    const history = useHistory()
 
     useEffect(() => {
         const pets = filterPets(state.pets, state.filter)
@@ -68,7 +77,18 @@ export const PetList = () => {
             .toLowerCase()
     }
 
-    return (
+    function openNewPet() {
+        history.push('/newpet/' + filteredKind)
+    }
+
+    return <div>
+        {VALID_KINDS.includes(filteredKind) &&
+            <Tooltip title={`Adicionar ${KIND_LABELS[filteredKind]}`} aria-label='add'>
+                <Fab className={classes.addButton} onClick={openNewPet} color='primary' aria-label='add'>
+                    <AddIcon />
+                </Fab>
+            </Tooltip>
+        }
         <Grid container>
 
             <Filters filter={state.filter} setFilter={setFilter} />
@@ -87,7 +107,7 @@ export const PetList = () => {
             ))}
 
         </Grid>
-    )
+    </div>
 }
 
 function HeaderItem(props) {
@@ -128,7 +148,47 @@ const useStyles = makeStyles(() => ({
         borderRadius: '10px',
         height: '100%',
         fontWeight: '600'
-    }
+    },
+    gridLabelStatus: {
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-around',
+        alignItems: 'flex-end'
+    },
+    labelStatus: {
+        display: 'flex',
+        flexDirection: 'row-reverse',
+        marginRight: '4vw'
+    },
+    colorParaAdocao: {
+        width: '17px',
+        height: '17px',
+        margin: '0 5px',
+        backgroundColor: STATE_COLORS.available,
+    },
+    colorAdotado: {
+        width: '17px',
+        height: '17px',
+        margin: '0 5px',
+        backgroundColor: STATE_COLORS.adopted,
+    },
+    colorResidente: {
+        width: '17px',
+        height: '17px',
+        margin: '0 5px',
+        backgroundColor: STATE_COLORS.resident,
+    },
+    colorEstrelinha: {
+        width: '17px',
+        height: '17px',
+        margin: '0 5px',
+        backgroundColor: STATE_COLORS.star,
+    },
+    addButton: {
+        right: '10px',
+        bottom: '10px',
+        position: 'fixed',
+    },
 }))
 
 export default PetList

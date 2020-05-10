@@ -41,6 +41,12 @@ function App() {
         <Route exact path="/">
           <PetList />
         </Route>
+        <Route exact path="/newpet/dog">
+          <Details petId={null} kind='dog'/>
+        </Route>
+        <Route exact path="/newpet/cat">
+          <Details petId={null} kind='cat'/>
+        </Route>
         <Route exact path="/details/:id">
           <ParamDetails />
         </Route>
