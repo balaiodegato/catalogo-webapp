@@ -39,6 +39,11 @@ const TEST_RESULT_VALUES = {
 
 const NULLABLE_KEYS = ['status', 'rescue_date', 'test_result', 'adoption_date']
 
+const MONTHS_PTBR = [
+  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+]
+
 function normalizeField(value, string_values, valid_values) {
   if (value && value.toLowerCase && string_values[value.toLowerCase()]) {
     return string_values[value.toLowerCase()]
@@ -46,6 +51,38 @@ function normalizeField(value, string_values, valid_values) {
     return null
   }
   return value
+}
+
+function normalizeCastrationFields(pet) {
+  if (pet.castrated === true || pet.castrated === false) {
+    return
+  }
+
+  if (!pet.castrated || typeof pet.castrated !== typeof '') {
+    pet.castrated = false
+    pet.castration_date = null
+    return
+  }
+
+  pet.castrated = pet.castrated.trim().toLowerCase()
+
+  if (pet.castrated === "" || pet.castrated === 'não') {
+    pet.castrated = false
+    pet.castration_date = null
+  } else if (pet.castrated.trim() === 'sim') {
+    pet.castrated = true
+    pet.castration_date = null
+  } else {
+    const [monthStr, yearStr] = pet.castrated.split(' ')
+    const monthIndex = MONTHS_PTBR.indexOf(monthStr.toLowerCase())
+    const year = Number(yearStr)
+    if (monthIndex !== -1 && !isNaN(year) && year >= 2010 && year <= 2030) {
+      pet.castration_date = String(year) + '-' + String(monthIndex + 1).padStart(2, '0') + '-01'
+    } else {
+      pet.castration_date = null
+    }
+    pet.castrated = false
+  }
 }
 
 function normalizePetData(petData) {
@@ -69,9 +106,7 @@ function normalizePetData(petData) {
     pet.status = STATES[pet.status]
   }
 
-  if (!pet.castration_date && pet.castrated === "Sim") {
-    pet.castration_date = '2010-01-01'
-  }
+  normalizeCastrationFields(pet)
 
   pet.rescue_info = String(pet.rescue_info || "")
   pet.behaviour_info = String(pet.behaviour_info || "")
