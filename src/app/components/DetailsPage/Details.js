@@ -304,15 +304,19 @@ function Details(props) {
 
   async function onSave(newValues) {
     if (props.petId === null) {
-      setLoading(true);
-      const newPet = await Api.createPet({...newValues, kind: props.kind})
-      history.push('/details/' + newPet.id);
+      if (newValues.name) {
+        setLoading(true);
+        const newPet = await Api.createPet({...newValues, kind: props.kind})
+        history.push('/details/' + newPet.id);
+      }
     } else {
-      savePet({...pet, ...newValues})
-      setLoading(true);
-      await Api.savePet(pet.id, newValues);
-      saveDataTimestamp(Date.now());
-      setLoading(false);
+      if (Object.keys(newValues).length > 0) {
+        savePet({...pet, ...newValues})
+        setLoading(true);
+        await Api.savePet(pet.id, newValues);
+        saveDataTimestamp(Date.now());
+        setLoading(false);
+      }
     }
   }
 
