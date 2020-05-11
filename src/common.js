@@ -6,7 +6,7 @@ export const VALID_STATES = {
     'star': ['star', 'Estrelinha'],
     'available': ['available', 'Para adoção'],
     'adopted': ['adopted', 'Adotado'],
-    'resident': ['resident', 'Resident']
+    'resident': ['resident', 'Residente']
 }
 
 export const STATES = {
