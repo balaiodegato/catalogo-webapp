@@ -30,7 +30,7 @@ const HeaderContainer = styled.div`
     display: flex;
     align-items: center;
     height: 70px;
-    width: 100vw;
+    width: 100%;
 `
 
 const Logo = styled.img.attrs({

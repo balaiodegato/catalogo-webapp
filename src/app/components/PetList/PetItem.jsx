@@ -10,13 +10,13 @@ export function PetItem({ pet }) {
     const { state, dispatch } = useContext(AppContext)
     const classes = useStyles()
     const history = useHistory()
-    const itemRef = createRef()
 
     useEffect(() => {
         if(state.selectedPetId && state.selectedPetId === pet.id) {
-            itemRef.current.focus()
+            window.location.hash = `#${pet.id}`;
+            window.scrollTo({ left: 0, top: window.scrollY - 75 })
         }
-    }, [state.selectedPetId, itemRef, pet.id])
+    }, [state.selectedPetId, pet.id])
 
     const statusClass = {
         [STATES.adopted]: `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
@@ -41,7 +41,6 @@ export function PetItem({ pet }) {
 
     return (
         <Grid
-            ref={itemRef}
             id={pet.id}
             container
             className={classes.container}
