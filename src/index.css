@@ -1,10 +1,10 @@
 * {
-  font-family: Lato;
+  font-family: 'Lato';
 }
 
 body {
   margin: 0;
-  font-family: Lato;
+  font-family: 'Lato';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #8080800a;
