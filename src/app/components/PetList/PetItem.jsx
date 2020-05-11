@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { createRef, useEffect, useContext } from 'react';
 import { Grid, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
-import catPhotoDefault from '../../../assets/cat-default-photo.jpg'
-import dogPhotoDefault from '../../../assets/dog-default-photo.jpg'
-import { STATES, STATE_COLORS, KINDS } from '../../../common'
+
+import { STATES, STATE_COLORS, DEFAULT_PHOTOS } from '../../../common'
+import { AppContext, ACTIONS } from '../../../AppContext';
 
 export function PetItem({ pet }) {
-
+    const { state, dispatch } = useContext(AppContext)
     const classes = useStyles()
     const history = useHistory()
+    const itemRef = createRef()
+
+    useEffect(() => {
+        if(state.selectedPetId && state.selectedPetId === pet.id) {
+            itemRef.current.focus()
+        }
+    }, [state.selectedPetId])
 
     const statusClass = {
         [STATES.adopted]: `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
@@ -25,11 +32,16 @@ export function PetItem({ pet }) {
     }
 
     const navigateToDetails = () => {
+        dispatch({
+            type: ACTIONS.SET_SELECTED_PET,
+            payload: pet.id
+        })
         history.push(`/details/${pet.id}`)
     }
 
     return (
         <Grid
+            ref={itemRef}
             id={pet.id}
             container
             className={classes.container}
@@ -53,7 +65,7 @@ export function PetItem({ pet }) {
                         item
                     >
                         <PetPhoto
-                            src={pet.img ? pet.img : getDefaultPhoto(pet)}
+                            src={pet.img ? pet.img : DEFAULT_PHOTOS[pet.kind]}
                         />
                     </Grid>
                 </GridData>
@@ -81,17 +93,6 @@ export function PetItem({ pet }) {
             </Paper>
         </Grid>
     )
-}
-
-function getDefaultPhoto(pet) {
-    switch(pet.kind) {
-        case KINDS.cat:
-            return catPhotoDefault
-        case KINDS.dog:
-            return dogPhotoDefault
-        default:
-            return null
-    }
 }
 
 function GridData(props) {
