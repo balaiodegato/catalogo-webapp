@@ -16,7 +16,7 @@ export function PetItem({ pet }) {
         if(state.selectedPetId && state.selectedPetId === pet.id) {
             itemRef.current.focus()
         }
-    }, [state.selectedPetId])
+    }, [state.selectedPetId, itemRef, pet.id])
 
     const statusClass = {
         [STATES.adopted]: `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
