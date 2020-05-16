@@ -14,6 +14,7 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   MuiPickersUtilsProvider,
@@ -33,6 +34,7 @@ import {
   TEST_RESULT_LABELS,
   VALID_KINDS,
   DEFAULT_PHOTOS,
+  formatDate,
 } from '../../../common';
 
 const useStyles = makeStyles(theme => ({
@@ -52,21 +54,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function formatDate(dt) {
-  if (!dt) {
-    return '-'
-  }
-
-  return moment(dt).format('DD/MM/YYYY')
-}
-
 function EditableDateField(props) {
   const defaultValue = props.defaultValue ? moment(props.defaultValue).toDate() : new Date()
   const [selectedDate, handleDateChange] = useState(defaultValue)
 
   const onValueChange = value => {
     handleDateChange(value)
-    props.onChange(value)
+    props.onChange(value.format('YYYY-MM-DD'))
   }
 
   return <KeyboardDatePicker
@@ -82,6 +76,43 @@ function EditableDateField(props) {
       'aria-label': 'change date',
     }}
   />
+}
+
+function CastrationEditFields(props) {
+  const pet = props.pet
+  const [castrated, setCastrated] = useState(pet.castrated)
+
+  function onCastratedCheck(e) {
+    setCastrated(e.target.checked)
+    props.onValueChange('castrated', e.target.checked)
+    if (!e.target.checked && pet.castrated) {
+      props.onValueChange('castration_date', moment().format('YYYY-MM-DD'))
+    } else if (e.target.checked) {
+      props.onValueChange('castration_date', pet.castration_date)
+    }
+  }
+
+  return <>
+    <FormControlLabel
+      value="castrated"
+      control={
+        <Checkbox
+          color="primary"
+          checked={castrated}
+          onChange={value => onCastratedCheck(value)}
+        />
+      }
+      label="Castrado"
+      labelPlacement="start"
+    />
+    {!castrated && <EditableDateField
+      label="Data prevista para castração"
+      defaultValue={pet.castration_date}
+      onChange = {
+        value => props.onValueChange('castration_date', value)
+      }
+    />}
+  </>
 }
 
 function MainInfo(props) {
@@ -178,14 +209,16 @@ function MainInfo(props) {
             : <Box display="flex" marginTop="10px"><span><b>Data da adoção:</b> {formatDate(pet.adoption_date)}</span></Box>
           }
           {editMode ?
-            <EditableDateField
-              label="Data da castração"
-              defaultValue={pet.castration_date}
-              onChange={value => onValueChange('castration_date', value)}
-            />
-            : <Box display="flex" marginTop="10px"><span><b>Castrado: </b> {
-                pet.castration_date ? `Sim (${formatDate(pet.castration_date)})` : "Não"
-              }</span></Box>
+            <CastrationEditFields pet={pet} onValueChange={onValueChange}/>
+            : <>
+              <Box display="flex" marginTop="10px">
+                <span><b>Castrado:</b> {pet.castrated ? 'Sim' : 'Não'}</span>
+              </Box>
+              {(!pet.castrated && pet.castration_date) &&
+                <Box display="flex" marginTop="10px">
+                  <span><b>Data prevista para castração:</b> {formatDate(pet.castration_date)}</span>
+                </Box>}
+            </>
           }
         </Box>
       </Box>
@@ -304,15 +337,19 @@ function Details(props) {
 
   async function onSave(newValues) {
     if (props.petId === null) {
-      setLoading(true);
-      const newPet = await Api.createPet({...newValues, kind: props.kind})
-      history.push('/details/' + newPet.id);
+      if (newValues.name) {
+        setLoading(true);
+        const newPet = await Api.createPet({...newValues, kind: props.kind})
+        history.push('/details/' + newPet.id);
+      }
     } else {
-      savePet({...pet, ...newValues})
-      setLoading(true);
-      await Api.savePet(pet.id, newValues);
-      saveDataTimestamp(Date.now());
-      setLoading(false);
+      if (Object.keys(newValues).length > 0) {
+        savePet({...pet, ...newValues})
+        setLoading(true);
+        await Api.savePet(pet.id, newValues);
+        saveDataTimestamp(Date.now());
+        setLoading(false);
+      }
     }
   }
 
