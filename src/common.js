@@ -1,4 +1,6 @@
 
+import moment from 'moment'
+
 import catPhotoDefault from './assets/cat-default-photo.jpg'
 import dogPhotoDefault from './assets/dog-default-photo.jpg'
 
@@ -66,4 +68,12 @@ export const DEFAULT_PHOTOS = {
 export const KIND_LABELS = {
     'dog': 'Cão',
     'cat': 'Gato',
+}
+
+export function formatDate(dt) {
+  if (!dt) {
+    return '-'
+  }
+
+  return moment(dt).format('DD/MM/YYYY')
 }

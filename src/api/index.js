@@ -194,9 +194,10 @@ class Api {
     }
   }
 
-  static getAllPets() {
+  static async getAllPets() {
     try {
-      return axios.get(this.BASE_URL + '?cache=true')
+      const result = await axios.get(this.BASE_URL + '?cache=true')
+      return result.data.map(normalizePetData)
     } catch(err) {
       console.warn('Erro ao requisitar Firebase: ', err);
     }

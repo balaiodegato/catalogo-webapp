@@ -34,6 +34,7 @@ import {
   TEST_RESULT_LABELS,
   VALID_KINDS,
   DEFAULT_PHOTOS,
+  formatDate,
 } from '../../../common';
 
 const useStyles = makeStyles(theme => ({
@@ -52,14 +53,6 @@ const useStyles = makeStyles(theme => ({
     color: '#fff',
   },
 }));
-
-function formatDate(dt) {
-  if (!dt) {
-    return '-'
-  }
-
-  return moment(dt).format('DD/MM/YYYY')
-}
 
 function EditableDateField(props) {
   const defaultValue = props.defaultValue ? moment(props.defaultValue).toDate() : new Date()
