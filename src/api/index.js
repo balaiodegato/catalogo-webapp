@@ -21,14 +21,17 @@ const GENDER_VALUES = ['M', 'F']
 
 const TEST_RESULT_STRINGS = {
   cat: {
-    'Positivo fiv': 'fiv-positive',
-    'Positivo felv': 'felv-positive',
-    'Positivo fiv e felv': 'fiv-felv-positive',
-    'Negativo': 'negative',
+    'positivo fiv': 'fiv-positive',
+    'positivo felv': 'felv-positive',
+    'felv positivo': 'felv-positive',
+    'positivo fiv e felv': 'fiv-felv-positive',
+    'negativo': 'negative',
+    'negativa': 'negative',
   },
   dog: {
-    'Positivo leishmaniose': true,
-    'Negativo': false,
+    'positivo leishmaniose': true,
+    'positivo': true,
+    'negativo': false,
   },
 }
 
@@ -45,8 +48,8 @@ const MONTHS_PTBR = [
 ]
 
 function normalizeField(value, string_values, valid_values) {
-  if (value && value.toLowerCase && string_values[value.toLowerCase()]) {
-    return string_values[value.toLowerCase()]
+  if (value && value.toLowerCase && string_values[value.trim().toLowerCase()]) {
+    return string_values[value.trim().toLowerCase()]
   } else if (!valid_values.includes(value)) {
     return null
   }
