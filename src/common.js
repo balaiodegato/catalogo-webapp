@@ -70,10 +70,21 @@ export const KIND_LABELS = {
     'cat': 'Gato',
 }
 
+export const MONTHS_PTBR = [
+  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+]
+
+export function capitalizeFirstLetter(str) {
+  return str[0].toUpperCase() + str.slice(1)
+}
+
 export function formatDate(dt) {
   if (!dt) {
     return '-'
   }
 
-  return moment(dt).format('DD/MM/YYYY')
+  dt = moment(dt)
+  const monthStr = capitalizeFirstLetter(MONTHS_PTBR[dt.month()])
+  return `${monthStr} ${dt.year()}`
 }

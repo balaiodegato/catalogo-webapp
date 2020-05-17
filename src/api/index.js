@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
-import { VALID_KINDS } from '../common';
+import { VALID_KINDS, MONTHS_PTBR } from '../common';
 
 const STATES = {
   'Estrelinha': 'star',
@@ -41,11 +41,6 @@ const TEST_RESULT_VALUES = {
 }
 
 const NULLABLE_KEYS = ['status', 'rescue_date', 'test_result', 'adoption_date']
-
-const MONTHS_PTBR = [
-  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
-  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
-]
 
 const SPECIAL_DATE_VALUES = {
   '2018': '2018-01-01',
