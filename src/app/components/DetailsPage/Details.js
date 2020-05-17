@@ -37,6 +37,26 @@ import {
   formatDate,
 } from '../../../common';
 
+function formatAge(dt) {
+  const monthsTotal = moment().diff(moment(dt), 'month')
+  const years = Math.floor(monthsTotal/12)
+  const months = monthsTotal % 12
+
+  if (years === 0) {
+    return `${months} meses`
+  } else {
+    return `${years} anos e ${months} meses`
+  }
+}
+
+function formatBirthday(dt) {
+  if (!dt) {
+    return '-'
+  }
+
+  return <span>{formatDate(dt)}<br></br>({formatAge(dt)})</span>
+}
+
 const useStyles = makeStyles(theme => ({
   editbutton: {
     position: 'absolute',
@@ -152,14 +172,14 @@ function MainInfo(props) {
       <Box fontSize="20px" marginTop="20px" display="flex" flexDirection="row">
         <Box display="flex" flexDirection="column" justifyContent="flex-start" alignContent="flex-start">
           {editMode ?
-            <TextField
-              type="number"
-              InputLabelProps={{shrink: true}}
-              onChange={e => onValueChange('age', e)}
-              label="Idade (meses)"
-              variant="outlined"
-              defaultValue={pet.age} />
-            : <Box display="flex"><span><b>Idade:</b> {pet.age} meses</span></Box>
+            <EditableDateField
+              label="Data de nascimento"
+              defaultValue={pet.when_born}
+              onChange={value => onValueChange('when_born', value)}
+            />
+            : <Box display="flex">
+              <span><b>Data de nascimento:</b> {formatBirthday(pet.when_born)}</span>
+            </Box>
           }
           {editMode ?
             <EditableDateField
