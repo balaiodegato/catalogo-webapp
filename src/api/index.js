@@ -66,6 +66,10 @@ function normalizeDateMonthYearFormat(text) {
     return null
   }
 
+  if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(text)) {
+    return text
+  }
+
   text = text.trim().toLowerCase()
 
   if (SPECIAL_DATE_VALUES[text]) {
