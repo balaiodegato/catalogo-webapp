@@ -47,6 +47,11 @@ const MONTHS_PTBR = [
   'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
 ]
 
+const SPECIAL_DATE_VALUES = {
+  '2018': '2018-01-01',
+  'gosto 2016': '2016-08-01',
+}
+
 function normalizeField(value, string_values, valid_values) {
   if (value && value.toLowerCase && string_values[value.trim().toLowerCase()]) {
     return string_values[value.trim().toLowerCase()]
@@ -54,6 +59,37 @@ function normalizeField(value, string_values, valid_values) {
     return null
   }
   return value
+}
+
+function normalizeDateMonthYearFormat(text) {
+  if (!text) {
+    return null
+  }
+
+  if (/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/.test(text)) {
+    return text
+  }
+
+  text = text.trim().toLowerCase()
+
+  if (SPECIAL_DATE_VALUES[text]) {
+    return SPECIAL_DATE_VALUES[text]
+  }
+
+  if (text.split(' ').length !== 2) {
+    console.warn('Invalid date length after split:', text)
+    return null
+  }
+
+  const [monthStr, yearStr] = text.split(' ')
+  const monthIndex = MONTHS_PTBR.indexOf(monthStr.toLowerCase())
+  const year = Number(yearStr)
+  if (monthIndex !== -1 && !isNaN(year) && year >= 2010 && year <= 2030) {
+    const date = String(year) + '-' + String(monthIndex + 1).padStart(2, '0') + '-01'
+    return date
+  } else {
+    return null
+  }
 }
 
 function normalizeCastrationFields(pet) {
@@ -76,14 +112,7 @@ function normalizeCastrationFields(pet) {
     pet.castrated = true
     pet.castration_date = null
   } else {
-    const [monthStr, yearStr] = pet.castrated.split(' ')
-    const monthIndex = MONTHS_PTBR.indexOf(monthStr.toLowerCase())
-    const year = Number(yearStr)
-    if (monthIndex !== -1 && !isNaN(year) && year >= 2010 && year <= 2030) {
-      pet.castration_date = String(year) + '-' + String(monthIndex + 1).padStart(2, '0') + '-01'
-    } else {
-      pet.castration_date = null
-    }
+    pet.castration_date = normalizeDateMonthYearFormat(pet.castrated)
     pet.castrated = false
   }
 }
@@ -110,6 +139,10 @@ function normalizePetData(petData) {
   }
 
   normalizeCastrationFields(pet)
+
+  pet.when_born = normalizeDateMonthYearFormat(pet.when_born)
+  pet.rescue_date = normalizeDateMonthYearFormat(pet.rescue_date)
+  pet.adoption_date = normalizeDateMonthYearFormat(pet.adoption_date)
 
   pet.rescue_info = String(pet.rescue_info || "")
   pet.behaviour_info = String(pet.behaviour_info || "")

@@ -81,11 +81,11 @@ export function PetItem({ pet }) {
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.rescue_date}
+                    {formatDate(pet.rescue_date)}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.adoption_date}
+                    {formatDate(pet.adoption_date)}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
