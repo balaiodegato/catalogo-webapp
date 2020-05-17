@@ -357,9 +357,12 @@ function Details(props) {
     async function fetchPet() {
       if (props.petId) {
         const pet = await Api.getPet(props.petId);
-        console.log(props.petId, pet)
-        pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
-        savePet(pet);
+        if (pet) {
+          pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
+          savePet(pet);
+        } else {
+          savePet({error: true})
+        }
       } else if (props.petId === null && VALID_KINDS.includes(props.kind)) {
         savePet({kind: props.kind})
       }
@@ -388,6 +391,10 @@ function Details(props) {
 
   if (!pet) {
     return <Box>Loading</Box>
+  }
+
+  if (pet.error) {
+    return <Box>Erro ao carregar pet, tente novamente em alguns minutos</Box>
   }
 
   return (
