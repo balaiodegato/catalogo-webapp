@@ -1,4 +1,6 @@
 
+import moment from 'moment'
+
 import catPhotoDefault from './assets/cat-default-photo.jpg'
 import dogPhotoDefault from './assets/dog-default-photo.jpg'
 
@@ -66,4 +68,23 @@ export const DEFAULT_PHOTOS = {
 export const KIND_LABELS = {
     'dog': 'Cão',
     'cat': 'Gato',
+}
+
+export const MONTHS_PTBR = [
+  'janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho',
+  'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'
+]
+
+export function capitalizeFirstLetter(str) {
+  return str[0].toUpperCase() + str.slice(1)
+}
+
+export function formatDate(dt) {
+  if (!dt) {
+    return '-'
+  }
+
+  dt = moment(dt)
+  const monthStr = capitalizeFirstLetter(MONTHS_PTBR[dt.month()])
+  return `${monthStr} ${dt.year()}`
 }

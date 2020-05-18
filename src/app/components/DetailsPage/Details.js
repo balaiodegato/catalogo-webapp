@@ -14,6 +14,7 @@ import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import Backdrop from '@material-ui/core/Backdrop';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   MuiPickersUtilsProvider,
@@ -33,7 +34,28 @@ import {
   TEST_RESULT_LABELS,
   VALID_KINDS,
   DEFAULT_PHOTOS,
+  formatDate,
 } from '../../../common';
+
+function formatAge(dt) {
+  const monthsTotal = moment().diff(moment(dt), 'month')
+  const years = Math.floor(monthsTotal/12)
+  const months = monthsTotal % 12
+
+  if (years === 0) {
+    return `${months} meses`
+  } else {
+    return `${years} anos e ${months} meses`
+  }
+}
+
+function formatBirthday(dt) {
+  if (!dt) {
+    return '-'
+  }
+
+  return <span>{formatDate(dt)}<br></br>({formatAge(dt)})</span>
+}
 
 const useStyles = makeStyles(theme => ({
   editbutton: {
@@ -52,21 +74,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function formatDate(dt) {
-  if (!dt) {
-    return '-'
-  }
-
-  return moment(dt).format('DD/MM/YYYY')
-}
-
 function EditableDateField(props) {
   const defaultValue = props.defaultValue ? moment(props.defaultValue).toDate() : new Date()
   const [selectedDate, handleDateChange] = useState(defaultValue)
 
   const onValueChange = value => {
     handleDateChange(value)
-    props.onChange(value)
+    props.onChange(value.format('YYYY-MM-DD'))
   }
 
   return <KeyboardDatePicker
@@ -82,6 +96,61 @@ function EditableDateField(props) {
       'aria-label': 'change date',
     }}
   />
+}
+
+function CastrationEditFields(props) {
+  const pet = props.pet
+  const [castrated, setCastrated] = useState(pet.castrated)
+
+  function onCastratedCheck(e) {
+    setCastrated(e.target.checked)
+    props.onValueChange('castrated', e.target.checked)
+    if (!e.target.checked && pet.castrated) {
+      props.onValueChange('castration_date', moment().format('YYYY-MM-DD'))
+    } else if (e.target.checked) {
+      props.onValueChange('castration_date', pet.castration_date)
+    }
+  }
+
+  return <>
+    <FormControlLabel
+      value="castrated"
+      control={
+        <Checkbox
+          color="primary"
+          checked={castrated}
+          onChange={value => onCastratedCheck(value)}
+        />
+      }
+      label="Castrado"
+      labelPlacement="start"
+    />
+    {!castrated && <EditableDateField
+      label="Data prevista para castração"
+      defaultValue={pet.castration_date}
+      onChange = {
+        value => props.onValueChange('castration_date', value)
+      }
+    />}
+  </>
+}
+
+function DateField(props) {
+  const formatFn = props.format || formatDate
+  const optionalProps = {}
+  if (props.marginTop) {
+    optionalProps.marginTop = props.marginTop
+  }
+  return <>{props.editMode ?
+    <EditableDateField
+      label={props.label}
+      defaultValue={props.originalValue}
+      onChange={value => props.onValueChange(value)}
+    />
+    : <Box display="flex" {...optionalProps}>
+      <span><b>{props.label}:</b> {formatFn(props.originalValue)}</span>
+    </Box>
+  }</>
 }
 
 function MainInfo(props) {
@@ -120,24 +189,20 @@ function MainInfo(props) {
       </Box>
       <Box fontSize="20px" marginTop="20px" display="flex" flexDirection="row">
         <Box display="flex" flexDirection="column" justifyContent="flex-start" alignContent="flex-start">
-          {editMode ?
-            <TextField
-              type="number"
-              InputLabelProps={{shrink: true}}
-              onChange={e => onValueChange('age', e)}
-              label="Idade (meses)"
-              variant="outlined"
-              defaultValue={pet.age} />
-            : <Box display="flex"><span><b>Idade:</b> {pet.age} meses</span></Box>
-          }
-          {editMode ?
-            <EditableDateField
-              label="Data do resgate"
-              defaultValue={pet.rescue_date}
-              onChange={value => onValueChange('rescue_date', value)}
-            />
-            : <Box display="flex" marginTop="10px"><span><b>Data do resgate:</b> {formatDate(pet.rescue_date)}</span></Box>
-          }
+          <DateField
+            label="Data de nascimento"
+            originalValue={pet.when_born}
+            onValueChange={value => onValueChange('when_born', value)}
+            format={formatBirthday}
+            editMode={editMode}
+          />
+          <DateField
+            label="Data do resgate"
+            originalValue={pet.rescue_date}
+            onValueChange={value => onValueChange('rescue_date', value)}
+            editMode={editMode}
+            marginTop="10px"
+          />
           {editMode ?
             <Select
               native
@@ -169,23 +234,24 @@ function MainInfo(props) {
             </Select>
             : <Box display="flex"><span><b>Sexo:</b> {GENDER_LABELS[pet.gender]}</span></Box>
           }
+          <DateField
+            label="Data da adoção"
+            originalValue={pet.adoption_date}
+            onValueChange={value => onValueChange('adoption_date', value)}
+            editMode={editMode}
+            marginTop="10px"
+          />
           {editMode ?
-            <EditableDateField
-              label="Data da adoção"
-              defaultValue={pet.adoption_date}
-              onChange={value => onValueChange('adoption_date', value)}
-            />
-            : <Box display="flex" marginTop="10px"><span><b>Data da adoção:</b> {formatDate(pet.adoption_date)}</span></Box>
-          }
-          {editMode ?
-            <EditableDateField
-              label="Data da castração"
-              defaultValue={pet.castration_date}
-              onChange={value => onValueChange('castration_date', value)}
-            />
-            : <Box display="flex" marginTop="10px"><span><b>Castrado: </b> {
-                pet.castration_date ? `Sim (${formatDate(pet.castration_date)})` : "Não"
-              }</span></Box>
+            <CastrationEditFields pet={pet} onValueChange={onValueChange}/>
+            : <>
+              <Box display="flex" marginTop="10px">
+                <span><b>Castrado:</b> {pet.castrated ? 'Sim' : 'Não'}</span>
+              </Box>
+              {(!pet.castrated && pet.castration_date) &&
+                <Box display="flex" marginTop="10px">
+                  <span><b>Data prevista para castração:</b> {formatDate(pet.castration_date)}</span>
+                </Box>}
+            </>
           }
         </Box>
       </Box>
@@ -291,9 +357,12 @@ function Details(props) {
     async function fetchPet() {
       if (props.petId) {
         const pet = await Api.getPet(props.petId);
-        console.log(props.petId, pet)
-        pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
-        savePet(pet);
+        if (pet) {
+          pet.crop = pet.crop || {x: 0, y: 0, width: 1, height: 1}
+          savePet(pet);
+        } else {
+          savePet({error: true})
+        }
       } else if (props.petId === null && VALID_KINDS.includes(props.kind)) {
         savePet({kind: props.kind})
       }
@@ -304,20 +373,28 @@ function Details(props) {
 
   async function onSave(newValues) {
     if (props.petId === null) {
-      setLoading(true);
-      const newPet = await Api.createPet({...newValues, kind: props.kind})
-      history.push('/details/' + newPet.id);
+      if (newValues.name) {
+        setLoading(true);
+        const newPet = await Api.createPet({...newValues, kind: props.kind})
+        history.push('/details/' + newPet.id);
+      }
     } else {
-      savePet({...pet, ...newValues})
-      setLoading(true);
-      await Api.savePet(pet.id, newValues);
-      saveDataTimestamp(Date.now());
-      setLoading(false);
+      if (Object.keys(newValues).length > 0) {
+        savePet({...pet, ...newValues})
+        setLoading(true);
+        await Api.savePet(pet.id, newValues);
+        saveDataTimestamp(Date.now());
+        setLoading(false);
+      }
     }
   }
 
   if (!pet) {
     return <Box>Loading</Box>
+  }
+
+  if (pet.error) {
+    return <Box>Erro ao carregar pet, tente novamente em alguns minutos</Box>
   }
 
   return (

@@ -3,7 +3,13 @@ import { Grid, Box, Paper } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom'
 
-import { STATES, STATE_COLORS, DEFAULT_PHOTOS } from '../../../common'
+import {
+  STATES,
+  STATE_COLORS,
+  DEFAULT_PHOTOS,
+  TEST_RESULT_LABELS,
+  formatDate,
+} from '../../../common'
 import { AppContext, ACTIONS } from '../../../AppContext';
 
 export function PetItem({ pet }) {
@@ -74,19 +80,20 @@ export function PetItem({ pet }) {
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.rescue_date}
+                    {formatDate(pet.rescue_date)}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.adoption_date}
+                    {formatDate(pet.adoption_date)}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.castrated}
+                    {pet.castrated ? 'Sim' : 'Não'}
+                    {pet.castration_date ?  ` (${formatDate(pet.castration_date)})` : ''}
                 </GridData>
 
                 <GridData className={classes.gridItem}>
-                    {pet.test_result}
+                    {TEST_RESULT_LABELS[pet.kind][pet.test_result]}
                 </GridData>
 
             </Paper>
