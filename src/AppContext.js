@@ -8,13 +8,15 @@ const initialState = {
         status: STATES.available
     },
     selectedPetId: undefined,
-    pets: []
+    pets: [],
+    countPets: {}
 }
 
 const ACTIONS = {
     SET_SELECTED_PET: 'setSelectedPet',
     SET_FILTER: 'setFilter',
-    SET_PETS: 'setPets'
+    SET_PETS: 'setPets',
+    SET_COUNT_PETS: 'setCountPets'
 }
 
 const AppContext = createContext(initialState)
@@ -38,6 +40,11 @@ const StateProvider = ({ children }) => {
                 return {
                     ...state,
                     pets: action.payload
+                }
+            case ACTIONS.SET_COUNT_PETS:
+                return {
+                    ...state,
+                    countPets: action.payload
                 }
             default:
                 throw new Error()
