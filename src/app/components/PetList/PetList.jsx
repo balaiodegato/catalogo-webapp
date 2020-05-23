@@ -9,7 +9,7 @@ import { useHistory } from 'react-router';
 import { PetItem } from './PetItem'
 import Filters from './Filters'
 import { AppContext, ACTIONS } from '../../../AppContext'
-import { VALID_STATES, STATE_COLORS, VALID_KINDS, KIND_LABELS } from '../../../common'
+import { STATES, VALID_STATES, STATE_COLORS, VALID_KINDS, KIND_LABELS } from '../../../common'
 
 export const PetList = () => {
     const { state, dispatch } = useContext(AppContext)
@@ -20,10 +20,12 @@ export const PetList = () => {
     const history = useHistory()
 
     useEffect(() => {
-        const pets = filterPets(state.pets, state.filter)
-        const orderedPets = sortPets(pets)
-        setFilteredPets(orderedPets);
-        setFilteredKind(state.filter.kind)
+        if(Array.isArray(state.pets)) {
+            const pets = filterPets(state.pets, state.filter)
+            const orderedPets = sortPets(pets)
+            setFilteredPets(orderedPets);
+            setFilteredKind(state.filter.kind)
+        }
     }, [state.pets, state.filter])
 
     const headers = [
@@ -45,23 +47,23 @@ export const PetList = () => {
         }
 
         return pets.filter(pet => pet.kind === filter.kind)
-            .filter(pet => VALID_STATES[filter.status].includes(pet.status)) //TEMP
+            // .filter(pet => VALID_STATES[filter.status].includes(pet.status)) //TEMP
             // Retornar esse código quando normalizar o status dos pets
-            // .filter(pet => filter.status === pet.status)
+            .filter(pet => filter.status === pet.status)
     }
 
     function sortPets(pets) {
         // Retornar esse código quando normalizar o status dos pets
-        // const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === STATES.available))
-        // const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === STATES.adopted))
-        // const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === STATES.resident))
-        // const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === STATES.star))
+        const petsParaAdocao = sortPetsByName(pets.filter(pet => pet.status === STATES.available))
+        const petsAdotados = sortPetsByName(pets.filter(pet => pet.status === STATES.adopted))
+        const petsResidentes = sortPetsByName(pets.filter(pet => pet.status === STATES.resident))
+        const petsEstrelinha = sortPetsByName(pets.filter(pet => pet.status === STATES.star))
 
         // TEMP
-        const petsParaAdocao = sortPetsByName(pets.filter(pet => VALID_STATES.available.includes(pet.status)))
-        const petsAdotados = sortPetsByName(pets.filter(pet => VALID_STATES.adopted.includes(pet.status)))
-        const petsResidentes = sortPetsByName(pets.filter(pet => VALID_STATES.resident.includes(pet.status)))
-        const petsEstrelinha = sortPetsByName(pets.filter(pet => VALID_STATES.star.includes(pet.status)))
+        // const petsParaAdocao = sortPetsByName(pets.filter(pet => VALID_STATES.available.includes(pet.status)))
+        // const petsAdotados = sortPetsByName(pets.filter(pet => VALID_STATES.adopted.includes(pet.status)))
+        // const petsResidentes = sortPetsByName(pets.filter(pet => VALID_STATES.resident.includes(pet.status)))
+        // const petsEstrelinha = sortPetsByName(pets.filter(pet => VALID_STATES.star.includes(pet.status)))
 
         return [...petsParaAdocao, ...petsAdotados, ...petsResidentes, ...petsEstrelinha]
     }
@@ -97,7 +99,7 @@ export const PetList = () => {
         }
         <Grid container>
 
-            <Filters filter={state.filter} setFilter={setFilter} />
+            <Filters filter={state.filter} countPets={state.countPets} setFilter={setFilter} />
             <Grid
                 item
                 xs={2}
