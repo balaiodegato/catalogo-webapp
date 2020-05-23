@@ -230,6 +230,16 @@ class Api {
       console.warn('Erro ao requisitar Firebase: ', err);
     }
   }
+
+  static async countPets() {
+    try {
+      const result = await axios.get(this.BASE_URL + '/count')
+      return result.data
+    } catch(err) {
+      console.warn('Erro ao requisitar Firebase: ', err);
+    }
+  }
+
 }
 
 export default Api;
