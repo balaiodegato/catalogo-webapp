@@ -1,10 +1,20 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import MSearchIcon from '@material-ui/icons/Search';
 
-import { STATES, STATE_COLORS, STATE_LABELS, KINDS } from '../../../common'
+import { STATES, STATE_COLORS, STATE_LABELS, KINDS, VALID_STATES } from '../../../common'
 
-export const Filters = ({ filter, setFilter }) => {
+export const Filters = ({ filter, setFilter, countPets }) => {
+    
+    const [consolidatedCount, setConsolidatedCount] = useState({ cat: {}, dog: {} })
+    
+    useEffect(() => {
+        const count = {
+            cat: consolidatesPetStates(countPets, 'cat'),
+            dog: consolidatesPetStates(countPets, 'dog')
+        }
+        setConsolidatedCount(count)
+    }, [countPets])
 
     const handleChangeFilter = (type, value) => {
         setFilter({
@@ -13,6 +23,36 @@ export const Filters = ({ filter, setFilter }) => {
         })
     }
 
+    const consolidatesPetStates = (countPets, kind) => {
+        const consolidatedCount = {
+            total: 0,
+            adopted: 0,
+            available: 0,
+            star: 0,
+            resident: 0
+        }
+
+        for(const state in countPets[kind]) {
+            const stateQuantity = countPets[kind][state]
+            
+            consolidatedCount.total += stateQuantity
+            if(VALID_STATES.adopted.includes(state)) {
+                consolidatedCount.adopted += stateQuantity
+            }
+            if(VALID_STATES.available.includes(state)) {
+                consolidatedCount.available += stateQuantity
+            }
+            if(VALID_STATES.star.includes(state)) {
+                consolidatedCount.star += stateQuantity
+            }
+            if(VALID_STATES.resident.includes(state)) {
+                consolidatedCount.resident += stateQuantity
+            }
+        }
+
+        return consolidatedCount
+    }
+    
     return (
         <Container>
             
@@ -29,12 +69,12 @@ export const Filters = ({ filter, setFilter }) => {
                     <KindButton 
                         selected={filter.kind === 'cat'}
                         onClick={() => handleChangeFilter('kind', KINDS.cat)}
-                    >Gatos</KindButton>
+                    >Gatos: { consolidatedCount.cat.total ? consolidatedCount.cat.total : '0' }</KindButton>
 
                     <KindButton 
                         selected={filter.kind === 'dog'}
                         onClick={() => handleChangeFilter('kind', KINDS.dog)}
-                    >Cães</KindButton>
+                    >Cães: { consolidatedCount.dog.total ? consolidatedCount.dog.total : '0' }</KindButton>
                 </KindContainer>
             </div>
 
@@ -43,25 +83,25 @@ export const Filters = ({ filter, setFilter }) => {
                     status={STATES.available}
                     selected={filter.status === STATES.available}
                     onClick={() => handleChangeFilter('status', STATES.available)}
-                >{STATE_LABELS.available}</StatusButton>
+                >{`${STATE_LABELS.available}: ${consolidatedCount[filter.kind].available ? consolidatedCount[filter.kind].available : '0'}`}</StatusButton>
 
                 <StatusButton
                     status={STATES.adopted}
                     selected={filter.status === STATES.adopted}
                     onClick={() => handleChangeFilter('status', STATES.adopted)}
-                >{STATE_LABELS.adopted}</StatusButton>
+                >{`${STATE_LABELS.adopted}: ${consolidatedCount[filter.kind].adopted ? consolidatedCount[filter.kind].adopted : '0'}`}</StatusButton>
 
                 <StatusButton
                     status={STATES.resident}
                     selected={filter.status === STATES.resident}
                     onClick={() => handleChangeFilter('status', STATES.resident)}
-                >{STATE_LABELS.resident}</StatusButton>
+                >{`${STATE_LABELS.resident}: ${consolidatedCount[filter.kind].resident ? consolidatedCount[filter.kind].resident : '0'}`}</StatusButton>
 
                 <StatusButton
                     status={STATES.star}
                     selected={filter.status === STATES.star}
                     onClick={() => handleChangeFilter('status', STATES.star)}
-                >{STATE_LABELS.star}</StatusButton>
+                >{`${STATE_LABELS.star}: ${consolidatedCount[filter.kind].star ? consolidatedCount[filter.kind].star : '0'}`}</StatusButton>
             </StatusContainer>
 
         </Container>

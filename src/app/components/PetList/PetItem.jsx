@@ -31,10 +31,10 @@ export function PetItem({ pet }) {
         [STATES.available]: `${classes.statusIndicator} ${classes.statusIndicatorAdocao }`,
 
         //TEMP
-        'Adotado': `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
-        'Estrelinha': `${classes.statusIndicator} ${classes.statusIndicatorEstrelinha}`,
-        'Residente': `${classes.statusIndicator} ${classes.statusIndicatorResidente}`,
-        'Para adoção': `${classes.statusIndicator} ${classes.statusIndicatorAdocao }`
+        // 'Adotado': `${classes.statusIndicator} ${classes.statusIndicatorAdotado}`,
+        // 'Estrelinha': `${classes.statusIndicator} ${classes.statusIndicatorEstrelinha}`,
+        // 'Residente': `${classes.statusIndicator} ${classes.statusIndicatorResidente}`,
+        // 'Para adoção': `${classes.statusIndicator} ${classes.statusIndicatorAdocao }`
     }
 
     const navigateToDetails = () => {

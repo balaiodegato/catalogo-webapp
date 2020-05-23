@@ -22,12 +22,17 @@ function App() {
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await Api.getAllPets()
+            const pets = await Api.getAllPets()
+            const countPets = await Api.countPets()
             // const response = { data: allPetsMock }
 
             dispatch({
                 type: ACTIONS.SET_PETS,
-                payload: data
+                payload: pets
+            })
+            dispatch({
+                type: ACTIONS.SET_COUNT_PETS,
+                payload: countPets
             })
         }
         fetchData()
