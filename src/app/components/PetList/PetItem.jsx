@@ -52,7 +52,6 @@ export function PetItem({ pet }) {
                 <GridData className={classes.gridItem}>
                     <Grid
                         item
-                        xs={4}
                     >
                         <Box
                             className={statusClass[pet.status]}
