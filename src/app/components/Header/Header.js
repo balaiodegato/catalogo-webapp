@@ -31,6 +31,7 @@ const HeaderContainer = styled.div`
     align-items: center;
     height: 70px;
     width: 100%;
+    box-shadow: 0px 1px 2px 0px grey;
 `
 
 const Logo = styled.img.attrs({
