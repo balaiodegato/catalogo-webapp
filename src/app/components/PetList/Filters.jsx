@@ -6,6 +6,9 @@ import { STATES, STATE_COLORS, STATE_LABELS, KINDS, VALID_STATES } from '../../.
 
 export const Filters = ({ filter, setFilter, countPets }) => {
     
+    const [filterName, setFilterName] = useState(filter.name)
+    const [timeoutRef, setTimeoutRef] = useState(null)
+
     const [consolidatedCount, setConsolidatedCount] = useState({ cat: {}, dog: {} })
     
     useEffect(() => {
@@ -21,6 +24,16 @@ export const Filters = ({ filter, setFilter, countPets }) => {
             ...filter,
             [type]: value
         })
+    }
+
+    const handleChangeFilterName = (value) => {
+        setFilterName(value)
+
+        clearTimeout(timeoutRef)
+        const ref = setTimeout(() => {
+            handleChangeFilter('name', value)
+        }, 500)
+        setTimeoutRef(ref)
     }
 
     const consolidatesPetStates = (countPets, kind) => {
@@ -60,8 +73,8 @@ export const Filters = ({ filter, setFilter, countPets }) => {
                 <SearchContainer>
                     <SearchIcon />
                     <SearchInput
-                        value={filter.name}
-                        onChange={e => handleChangeFilter('name', e.target.value)}
+                        value={filterName}
+                        onChange={e => handleChangeFilterName(e.target.value)}
                     />
                 </SearchContainer>
 
