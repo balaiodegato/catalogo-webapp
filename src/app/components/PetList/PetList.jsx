@@ -38,12 +38,16 @@ export const PetList = () => {
 
     function filterPets(pets, filter) {
         if (filter.name !== '') {
-            pets = pets.filter(pet =>
-                normalize(pet.name)
+            pets = pets.filter(pet => {
+                if(!pet.name) {
+                    return false
+                }
+                
+                return normalize(pet.name)
                     .includes(
-                        normalize(state.filter.name)
+                        normalize(filter.name)
                     )
-            )
+                })
         }
 
         return pets.filter(pet => pet.kind === filter.kind)
@@ -64,6 +68,7 @@ export const PetList = () => {
     }
 
     function setFilter(filter) {
+        console.log('SET FILTER', filter)
         dispatch({
             type: ACTIONS.SET_FILTER,
             payload: filter
