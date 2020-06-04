@@ -47,8 +47,8 @@ export const TEST_RESULT_LABELS = {
         null: 'Não testado',
     },
     dog: {
-        true: 'Positivo leishmaniose',
-        false: 'Negativo',
+        'positive-leish': 'Positivo leishmaniose',
+        'negative': 'Negativo',
         null: 'Não testado',
     },
 }
