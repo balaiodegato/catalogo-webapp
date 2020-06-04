@@ -29,15 +29,17 @@ const TEST_RESULT_STRINGS = {
     'negativa': 'negative',
   },
   dog: {
-    'positivo leishmaniose': true,
-    'positivo': true,
-    'negativo': false,
+    'positivo leishmaniose': 'positive-leish',
+    'positivo': 'positive-leish',
+    'negativo': 'negative',
+    'true': 'positive-leish',
+    'false': 'negative',
   },
 }
 
 const TEST_RESULT_VALUES = {
   cat: ['fiv-positive', 'felv-positive', 'fiv-felv-positive', 'negative'],
-  dog: [true, false],
+  dog: ['positive-leish', 'negative'],
 }
 
 const NULLABLE_KEYS = ['status', 'rescue_date', 'test_result', 'adoption_date']
